@@ -2,19 +2,21 @@ import React from "react";
 import backgroundImage from "../../../assets/images/background-image.jpeg";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { authSelector, clearState, login } from "../authSlice";
+import { authSelector, clearState, login, setShowSignup } from "../authSlice";
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Signup from "../signup/Signup";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { register, handleSubmit } = useForm();
-  const { isFetching, isSuccess, isError, errorMessage } =
+  const { isFetching, isSuccess, isError, errorMessage, showSignup } =
     useSelector(authSelector);
   const [toastId, setToastId] = React.useState("");
-  const [showSignup, setShowSignup] = React.useState(true);
+  const [passwordShow, setPasswordShow] = React.useState(false);
 
   const onSubmit = (data) => {
     dispatch(login(data));
@@ -68,12 +70,21 @@ const Login = () => {
                 className="w-full mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md
                 focus:ring-1 ring-cyan-500"
               />
-              <input
-                placeholder="Password"
-                {...register("password", { required: true })}
-                className="w-full mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md
+              <div
+                className="flex items-center justify-between w-full mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md
                 focus:ring-1 ring-cyan-500"
-              />
+              >
+                <input
+                  type={passwordShow ? "text" : "password"}
+                  placeholder="Password"
+                  {...register("password", { required: true })}
+                  className="flex-1"
+                />
+                <FontAwesomeIcon
+                  icon={passwordShow ? faEye : faEyeSlash}
+                  onClick={() => setPasswordShow(!passwordShow)}
+                />
+              </div>
               <button
                 type="submit"
                 className="w-full bg-yellow-500 text-white p-3 rounded-lg font-semibold text-lg"
@@ -84,7 +95,7 @@ const Login = () => {
             <a className="text-center my-2">Forgot Password?</a>
             <hr />
             <button
-              onClick={() => setShowSignup(!showSignup)}
+              onClick={() => dispatch(setShowSignup(!showSignup))}
               className="w-full bg-green-500 mt-8 mb-4 text-white p-3 rounded-lg font-semibold text-lg"
             >
               Register New Account

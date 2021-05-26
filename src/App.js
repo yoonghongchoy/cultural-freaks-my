@@ -14,18 +14,11 @@ function App() {
     <div className="App">
       <Router>
         <Switch>
-          <Route exact component={Login} path="/login" />
           <Route
             exact
             path="/"
-            render={(props) =>
-              localStorage.getItem("token") ? (
-                <Home />
-              ) : (
-                <Redirect
-                  to={{ pathname: "/login", state: { from: props.location } }}
-                />
-              )
+            render={() =>
+              localStorage.getItem("accessToken") ? <Home /> : <Login />
             }
           />
         </Switch>
