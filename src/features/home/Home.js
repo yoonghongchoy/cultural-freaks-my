@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { ReactComponent as ShareIcon } from "../../assets/icons/share.svg";
+import Post from "./post/Post";
 
 const Home = () => {
   return (
@@ -32,7 +33,10 @@ const Home = () => {
             </div>
           </div>
         </header>
-        <div className="flex h-full bg-yellow-50">
+        <div
+          className="flex bg-yellow-50"
+          style={{ height: "calc(100% - 4rem)" }}
+        >
           <div className="flex flex-col w-64 border-r-2 border-gray-400 p-6">
             <button className="mb-5 px-3 py-1.5 text-left bg-gray-400">
               Group
@@ -53,58 +57,10 @@ const Home = () => {
                 Recent
               </button>
             </div>
-            <div className="overflow-x-hidden overflow-y-auto p-4">
-              <div className="flex flex-col bg-gray-200 p-4">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 rounded-full bg-black overflow-hidden">
-                    <img
-                      alt="Jack"
-                      src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                      className="object-cover object-center"
-                    />
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <span>Username</span>
-                    <span className="text-sm">Time...</span>
-                  </div>
-                </div>
-                <div className="p-3 justify-self-center">
-                  <img
-                    alt="sample"
-                    src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg"
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <FontAwesomeIcon
-                      icon={faHeart}
-                      size="2x"
-                      className="cursor-pointer"
-                    />
-                    <FontAwesomeIcon
-                      icon={faComment}
-                      size="2x"
-                      className="cursor-pointer"
-                    />
-                    <ShareIcon className="h-8 w-8 cursor-pointer" />
-                  </div>
-                  <span>XXX Likes</span>
-                </div>
-                <div className="flex flex-col my-2 text-left">
-                  <div className="text-sm">
-                    <span>Username: </span>
-                    <span>Caption... @... #Melaka...</span>
-                  </div>
-                  <div className="text-sm">
-                    <span>Username: </span>
-                    <span>Comment...</span>
-                  </div>
-                  <div className="text-sm">
-                    <span>Username: </span>
-                    <span>Comment...</span>
-                  </div>
-                </div>
-              </div>
+            <div className="overflow-x-hidden overflow-y-auto p-4 space-y-3">
+              <Post />
+              <Post />
+              <Post />
             </div>
           </div>
           <div className="flex flex-col w-64 border-l-2 border-gray-400">
