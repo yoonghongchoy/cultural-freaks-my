@@ -37,7 +37,7 @@ const CreatePost = () => {
               <div className="flex flex-col justify-between">
                 <div className="flex justify-between items-center space-x-4">
                   <div className="w-full bg-gray-300 p-1">Photo</div>
-                  <div className="w-full bg-gray-300 p-1  ">Video</div>
+                  <div className="w-full bg-gray-300 p-1">Video</div>
                 </div>
                 <button type="submit" className="w-full bg-gray-300 p-1">
                   Post

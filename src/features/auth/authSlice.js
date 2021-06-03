@@ -25,8 +25,20 @@ export const signup = createAsyncThunk(
   "auth/signup",
   async (data, thunkAPI) => {
     try {
-      const response = await axios.post(`${url}/signup`, data);
-      console.log(response.data);
+      await axios.post(`${url}/signup`, data);
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export const activateAccount = createAsyncThunk(
+  "auth/activate",
+  async (data, thunkAPI) => {
+    try {
+      const response = await axios.get(`${url}/activate?token=${data}`);
+      localStorage.setItem("accessToken", response.data.accessToken);
     } catch (e) {
       console.log(e.response.data);
       return thunkAPI.rejectWithValue(e.response.data);
@@ -72,6 +84,19 @@ export const authSlice = createSlice({
       state.isFetching = true;
     },
     [signup.rejected]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = payload.message;
+    },
+    [activateAccount.fulfilled]: (state) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      return state;
+    },
+    [activateAccount.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [activateAccount.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = payload.message;
