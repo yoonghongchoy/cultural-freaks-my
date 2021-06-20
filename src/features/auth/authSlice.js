@@ -35,9 +35,9 @@ export const signup = createAsyncThunk(
 
 export const activateAccount = createAsyncThunk(
   "auth/activate",
-  async (data, thunkAPI) => {
+  async (token, thunkAPI) => {
     try {
-      const response = await axios.get(`${url}/activate?token=${data}`);
+      const response = await axios.get(`${url}/activate?token=${token}`);
       localStorage.setItem("accessToken", response.data.accessToken);
     } catch (e) {
       console.log(e.response.data);

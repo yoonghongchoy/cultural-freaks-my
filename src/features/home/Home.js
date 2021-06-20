@@ -9,17 +9,30 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Post from "./post/Post";
 import CreatePost from "./createPost/CreatePost";
+import { getPosts, postSelector, setShowCreateDialog } from "./postSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Home = () => {
-  const [showCreateDialog, setShowCreateDialog] = React.useState(false);
+  const dispatch = useDispatch();
+  const { showCreateDialog, posts } = useSelector(postSelector);
+
+  React.useEffect(() => {
+    dispatch(getPosts());
+  }, []);
+
+  React.useEffect(() => {
+    // console.log(posts);
+  }, [posts]);
+
+  React.useEffect(() => {
+    if (!showCreateDialog) {
+      dispatch(getPosts());
+    }
+  }, [showCreateDialog]);
 
   return (
     <div>
-      <div
-        className={`fixed flex h-screen ${
-          showCreateDialog ? "opacity-25" : "opacity-1"
-        }`}
-      >
+      <div className="fixed flex h-screen w-screen">
         <div className="flex-1 flex flex-col overflow-hidden">
           <header className="flex justify-between items-center bg-yellow-500 h-16 p-6 space-x-10">
             <h1 className="text-2xl font-bold cursor-pointer">
@@ -30,7 +43,7 @@ const Home = () => {
               <FontAwesomeIcon
                 icon={faPlus}
                 className="cursor-pointer"
-                onClick={() => setShowCreateDialog(!showCreateDialog)}
+                onClick={() => dispatch(setShowCreateDialog(!showCreateDialog))}
               />
               <FontAwesomeIcon
                 icon={faUserFriends}
@@ -70,10 +83,12 @@ const Home = () => {
                   Recent
                 </button>
               </div>
-              <div className="overflow-x-hidden overflow-y-auto p-4 space-y-3">
-                <Post />
-                <Post />
-                <Post />
+              <div className="flex flex-col h-full overflow-x-hidden overflow-y-auto p-4 space-y-3">
+                {posts.length > 0 &&
+                  posts.map((post, index) => <Post key={index} post={post} />)}
+                {posts.length === 0 && (
+                  <span className="m-auto">No posts found!</span>
+                )}
               </div>
             </div>
             <div className="flex flex-col w-64 border-l-2 border-gray-400">

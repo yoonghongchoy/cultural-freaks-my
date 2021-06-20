@@ -2,8 +2,45 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { ReactComponent as ShareIcon } from "../../../assets/icons/share.svg";
+import moment from "moment";
 
-const Post = () => {
+const Post = ({ post }) => {
+  const getFullName = () => {
+    return `${post.user.firstName} ${post.user.surname}`;
+  };
+
+  const getDuration = () => {
+    const now = moment(new Date());
+    const postDateTime = moment(post.createdAt);
+
+    const duration = moment.duration(now.diff(postDateTime));
+    const years = duration.years();
+    const days = duration.days();
+    const hours = duration.hours();
+    const minutes = duration.minutes();
+    if (days > 0) {
+      if (days === 1) {
+        return `Yesterday at ${postDateTime.format("h:mm a")}`;
+      } else {
+        if (years > 0) {
+          return `${postDateTime.format("D MMMM YYYY [at] h:mm a")}`;
+        } else {
+          return `${postDateTime.format("D MMMM [at] h:mm a")}`;
+        }
+      }
+    } else {
+      if (hours > 0) {
+        return postDateTime.fromNow();
+      } else {
+        if (minutes > 0) {
+          return postDateTime.fromNow();
+        } else {
+          return postDateTime.fromNow();
+        }
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col bg-gray-200 p-4">
       <div className="flex items-center space-x-4">
@@ -15,8 +52,8 @@ const Post = () => {
           />
         </div>
         <div className="flex flex-col text-left">
-          <span>Username</span>
-          <span className="text-sm">Time...</span>
+          <span>{getFullName()}</span>
+          <span className="text-sm">{getDuration()}</span>
         </div>
       </div>
       <div className="p-3 justify-self-center">
@@ -43,7 +80,7 @@ const Post = () => {
       </div>
       <div className="flex flex-col my-2 text-left">
         <div className="text-sm">
-          <span>Username: </span>
+          <span>{getFullName() + ": "}</span>
           <span>Caption... @... #Melaka...</span>
         </div>
         <div className="text-sm">

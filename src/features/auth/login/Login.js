@@ -50,9 +50,7 @@ const Login = () => {
   return (
     <div>
       <div
-        className={`fixed p-20 h-screen w-screen flex flex-col-reverse md:flex-row items-center justify-center bg-no-repeat bg-cover ${
-          showSignup ? "opacity-25" : "opacity-1"
-        }`}
+        className="fixed p-20 h-screen w-screen flex flex-col-reverse md:flex-row items-center justify-center bg-no-repeat bg-cover"
         style={{
           backgroundImage: `url(${backgroundImage})`,
         }}

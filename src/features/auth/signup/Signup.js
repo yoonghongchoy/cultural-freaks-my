@@ -101,7 +101,7 @@ const Signup = () => {
   }, [isError, isSuccess]);
 
   return (
-    <div className="relative w-screen h-screen inset-0 m-auto flex items-center justify-center">
+    <div className="relative w-screen h-screen inset-0 m-auto flex items-center justify-center bg-gray-300 bg-opacity-75">
       <Toaster position="top-right" reverseOrder={false} />
       <div className="container mx-auto flex flex-col items-center ">
         <div className="bg-white rounded-lg shadow-lg w-96">
