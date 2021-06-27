@@ -27,27 +27,16 @@ const CreatePost = () => {
   } = useForm();
   const hiddenImageUploadInput = React.useRef(null);
   const hiddenVideoUploadInput = React.useRef(null);
-  const [media, setMedia] = React.useState([]);
+  const [medias, setMedias] = React.useState([]);
   const [toastId, setToastId] = React.useState("");
 
   const onSubmit = (data) => {
     const { content, hashtag } = data;
-    const images = [];
-    const videos = [];
-
-    for (const m of media) {
-      if (m.type === "image") {
-        images.push(m.value);
-      } else if (m.type === "video") {
-        videos.push(m.value);
-      }
-    }
 
     const newPost = {
       content: content,
       hashtags: [hashtag],
-      images,
-      videos,
+      medias,
     };
     dispatch(createPosts(newPost));
   };
@@ -74,18 +63,18 @@ const CreatePost = () => {
 
   const handleUploadChange = async (event, type) => {
     const mediaUploaded = event.target.files;
-    const mediaFile = [...media];
+    const mediaFile = [...medias];
     for (const mediaUploadedElement of mediaUploaded) {
       const mediaObject = await convertFileToBase64(mediaUploadedElement, type);
       mediaFile.push(mediaObject);
     }
-    setMedia([...mediaFile]);
+    setMedias([...mediaFile]);
   };
 
   const deleteMedia = (index) => {
-    const mediaFile = [...media];
+    const mediaFile = [...medias];
     mediaFile.splice(index, 1);
-    setMedia([...mediaFile]);
+    setMedias([...mediaFile]);
   };
 
   React.useEffect(() => {
@@ -185,13 +174,13 @@ const CreatePost = () => {
                   </div>
                 </div>
                 <div className="h-32 my-2 border border-gray-400 p-2 overflow-x-auto overflow-y-auto text-left flex flex-col">
-                  {media.length === 0 && (
+                  {medias.length === 0 && (
                     <span className="text-xs justify-self-center self-center">
                       No file
                     </span>
                   )}
-                  {media.length > 0 &&
-                    media.map((item, index) => (
+                  {medias.length > 0 &&
+                    medias.map((item, index) => (
                       <div
                         key={index}
                         className="my-1 flex justify-between items-center"

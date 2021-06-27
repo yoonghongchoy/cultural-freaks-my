@@ -22,7 +22,8 @@ export const getPosts = createAsyncThunk(
   "post/getPosts",
   async (data, thunkAPI) => {
     try {
-      const response = await axios.get(url, { headers });
+      const endpoint = data ? `${url}?userId=${data}` : url;
+      const response = await axios.get(endpoint, { headers });
       return response.data;
     } catch (e) {
       console.log(e.response.data);

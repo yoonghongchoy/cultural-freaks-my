@@ -2,8 +2,6 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
-  faCog,
-  faEdit,
   faPlus,
   faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
@@ -11,18 +9,26 @@ import Post from "./post/Post";
 import CreatePost from "./createPost/CreatePost";
 import { getPosts, postSelector, setShowCreateDialog } from "./postSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { getMyProfile, profileSelector } from "../profile/profileSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { showCreateDialog, posts } = useSelector(postSelector);
+  const { myProfile } = useSelector(profileSelector);
+  const [userId, setUserId] = React.useState(null);
 
   React.useEffect(() => {
     dispatch(getPosts());
+    dispatch(getMyProfile());
   }, []);
 
   React.useEffect(() => {
-    // console.log(posts);
-  }, [posts]);
+    if (myProfile) {
+      setUserId(myProfile._id);
+    }
+  }, [posts, myProfile]);
 
   React.useEffect(() => {
     if (!showCreateDialog) {
@@ -50,7 +56,12 @@ const Home = () => {
                 className="cursor-pointer"
               />
               <FontAwesomeIcon icon={faBell} className="cursor-pointer" />
-              <div className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer">
+              <div
+                className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
+                onClick={() => {
+                  history.push(`profile/${userId}`);
+                }}
+              >
                 <img
                   alt="Jack"
                   src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
@@ -83,38 +94,13 @@ const Home = () => {
                   Recent
                 </button>
               </div>
-              <div className="flex flex-col h-full overflow-x-hidden overflow-y-auto p-4 space-y-3">
+              <div className="flex flex-col h-full overflow-x-hidden overflow-y-auto py-6 px-20 space-y-3">
                 {posts.length > 0 &&
                   posts.map((post, index) => <Post key={index} post={post} />)}
                 {posts.length === 0 && (
-                  <span className="m-auto">No posts found!</span>
+                  <span className="m-auto">No post found!</span>
                 )}
               </div>
-            </div>
-            <div className="flex flex-col w-64 border-l-2 border-gray-400">
-              <div className="flex justify-between bg-white p-3">
-                <span>Chat</span>
-                <div className="space-x-2">
-                  <FontAwesomeIcon icon={faEdit} className="cursor-pointer" />
-                  <FontAwesomeIcon icon={faCog} className="cursor-pointer" />
-                </div>
-              </div>
-              <div className="flex flex-col h-full overflow-x-hidden overflow-y-auto">
-                <div className="flex items-center space-x-2 p-3 cursor-pointer hover:bg-gray-200">
-                  <div className="w-10 h-10 rounded-full bg-black overflow-hidden">
-                    <img
-                      alt="Jack"
-                      src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                      className="object-cover object-center"
-                    />
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <span>Username</span>
-                    <span className="text-sm">Status</span>
-                  </div>
-                </div>
-              </div>
-              <input placeholder="Search..." className="p-3" />
             </div>
           </div>
         </div>

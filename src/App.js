@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Login from "./features/auth/login/Login";
 import Home from "./features/home/Home";
 import ActivateAccount from "./features/auth/activateAccount/ActivateAccount";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Profile from "./features/profile/Profile";
 
 function App() {
   return (
@@ -18,6 +21,7 @@ function App() {
             }
           />
           <Route exact path="/activation" component={ActivateAccount} />
+          <Route exact path="/profile/:userId" component={Profile} />
         </Switch>
       </Router>
     </div>

@@ -3,8 +3,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { ReactComponent as ShareIcon } from "../../../assets/icons/share.svg";
 import moment from "moment";
+import Slider from "react-slick";
 
 const Post = ({ post }) => {
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    adaptiveHeight: true,
+  };
+
   const getFullName = () => {
     return `${post.user.firstName} ${post.user.surname}`;
   };
@@ -41,6 +51,14 @@ const Post = ({ post }) => {
     }
   };
 
+  const getCaption = () => {
+    let hashtags = "";
+    for (const hashtag of post.hashtags) {
+      hashtags += ` ${hashtag}`;
+    }
+    return `${post.content}${hashtags}`;
+  };
+
   return (
     <div className="flex flex-col bg-gray-200 p-4">
       <div className="flex items-center space-x-4">
@@ -56,11 +74,31 @@ const Post = ({ post }) => {
           <span className="text-sm">{getDuration()}</span>
         </div>
       </div>
-      <div className="p-3 justify-self-center">
-        <img
-          alt="sample"
-          src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg"
-        />
+      <div className="p-3 justify-self-center max-w-5xl">
+        <Slider {...sliderSettings}>
+          {post.medias.length > 0 &&
+            post.medias.map((media, index) => {
+              if (media.type === "image") {
+                return (
+                  <img
+                    key={index}
+                    alt={media.name}
+                    src={`data:image/png;base64, ${media.value}`}
+                    className="max-w-max"
+                  />
+                );
+              } else if (media.type === "video") {
+                return (
+                  <video controls key={index}>
+                    <source
+                      type="video/mp4"
+                      src={`data:video/mp4;base64, ${media.value}`}
+                    />
+                  </video>
+                );
+              }
+            })}
+        </Slider>
       </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
@@ -81,7 +119,7 @@ const Post = ({ post }) => {
       <div className="flex flex-col my-2 text-left">
         <div className="text-sm">
           <span>{getFullName() + ": "}</span>
-          <span>Caption... @... #Melaka...</span>
+          <span>{getCaption()}</span>
         </div>
         <div className="text-sm">
           <span>Username: </span>
