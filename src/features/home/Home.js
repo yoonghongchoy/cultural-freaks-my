@@ -2,6 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
+  faCaretDown,
   faPlus,
   faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
@@ -11,6 +12,7 @@ import { getPosts, postSelector, setShowCreateDialog } from "./postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { getMyProfile, profileSelector } from "../profile/profileSlice";
+import ProfileDropdown from "../profile/ProfileDropdown";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -18,6 +20,7 @@ const Home = () => {
   const { showCreateDialog, posts } = useSelector(postSelector);
   const { myProfile } = useSelector(profileSelector);
   const [userId, setUserId] = React.useState(null);
+  const [showProfileDropdown, setShowProfileDropdown] = React.useState(false);
 
   React.useEffect(() => {
     dispatch(getPosts());
@@ -68,6 +71,11 @@ const Home = () => {
                   className="object-cover object-center"
                 />
               </div>
+              <FontAwesomeIcon
+                icon={faCaretDown}
+                className="cursor-pointer"
+                onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+              />
             </div>
           </header>
           <div
@@ -106,6 +114,7 @@ const Home = () => {
         </div>
       </div>
       <div>{showCreateDialog && <CreatePost />}</div>
+      {showProfileDropdown && <ProfileDropdown />}
     </div>
   );
 };

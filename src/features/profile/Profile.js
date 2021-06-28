@@ -2,6 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
+  faCaretDown,
   faPlus,
   faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +17,7 @@ import {
   profileSelector,
 } from "./profileSlice";
 import { getPosts, postSelector } from "../home/postSlice";
+import ProfileDropdown from "./ProfileDropdown";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -26,6 +28,7 @@ const Profile = () => {
   const { posts } = useSelector(postSelector);
   const { friends, myProfile, userProfile } = useSelector(profileSelector);
   const [isSameUser, setIsSameUser] = React.useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = React.useState(false);
 
   React.useEffect(() => {
     dispatch(getMyProfile());
@@ -73,9 +76,14 @@ const Profile = () => {
                   className="object-cover object-center"
                 />
               </div>
+              <FontAwesomeIcon
+                icon={faCaretDown}
+                className="cursor-pointer"
+                onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+              />
             </div>
           </header>
-          <div className="w-full overflow-y-auto">
+          <div className="w-full h-full overflow-y-auto bg-yellow-50">
             <div className="flex flex-col">
               <div className="flex items-center mx-auto p-4 space-x-32 border-b border-gray-400">
                 <div className="w-40 h-40 rounded-full bg-black overflow-hidden cursor-pointer">
@@ -137,6 +145,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      {showProfileDropdown && <ProfileDropdown />}
     </div>
   );
 };
