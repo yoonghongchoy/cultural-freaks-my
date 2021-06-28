@@ -4,15 +4,23 @@ import {
   faBell,
   faCaretDown,
   faPlus,
+  faTimes,
   faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
 import Post from "./post/Post";
 import CreatePost from "./createPost/CreatePost";
-import { getPosts, postSelector, setShowCreateDialog } from "./postSlice";
+import {
+  clearPostState,
+  getPosts,
+  postSelector,
+  setShowCreateDialog,
+} from "./postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { getMyProfile, profileSelector } from "../profile/profileSlice";
 import ProfileDropdown from "../profile/ProfileDropdown";
+import { searchSelector, setSearchQuery } from "../search/searchSlice";
+import Search from "../search/Search";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -24,6 +32,7 @@ const Home = () => {
 
   React.useEffect(() => {
     dispatch(getPosts());
+    dispatch(clearPostState());
     dispatch(getMyProfile());
   }, []);
 
@@ -47,7 +56,7 @@ const Home = () => {
             <h1 className="text-2xl font-bold cursor-pointer">
               CulturalFreaksMY
             </h1>
-            <input placeholder="Search bar" className="h-10 p-4 w-3/5" />
+            <Search />
             <div className="flex items-center space-x-4 text-2xl">
               <FontAwesomeIcon
                 icon={faPlus}
@@ -115,6 +124,7 @@ const Home = () => {
       </div>
       <div>{showCreateDialog && <CreatePost />}</div>
       {showProfileDropdown && <ProfileDropdown />}
+      {/*{searchQuery && <Search />}*/}
     </div>
   );
 };

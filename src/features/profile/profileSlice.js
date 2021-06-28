@@ -12,6 +12,8 @@ const initialState = {
   friends: [],
   myProfile: null,
   userProfile: null,
+  requestSent: false,
+  isFriend: "",
 };
 
 export const getFriends = createAsyncThunk(
@@ -23,6 +25,51 @@ export const getFriends = createAsyncThunk(
         `${url}?userId=${userId}&status=${status}`,
         { headers }
       );
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export const checkIsFriend = createAsyncThunk(
+  "profile/checkIsFriend",
+  async (data, thunkAPI) => {
+    try {
+      const response = await axios.get(`${url}/isFriend/${data}`, { headers });
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export const sendFriendRequest = createAsyncThunk(
+  "profile/sendFriendRequest",
+  async (data, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        url,
+        {
+          userId: data,
+        },
+        { headers }
+      );
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export const removeFriend = createAsyncThunk(
+  "profile/removeFriend",
+  async (data, thunkAPI) => {
+    try {
+      const response = await axios.delete(`${url}/${data}`, { headers });
       return response.data;
     } catch (e) {
       console.log(e.response.data);
@@ -64,11 +111,24 @@ export const profileSlice = createSlice({
     // getTotalNumberOfFriends: (state) => {
     //   return state.friends.length;
     // },
+    setRequestSent: (state, action) => {
+      state.requestSent = action.payload;
+    },
   },
   extraReducers: {
     [getFriends.fulfilled]: (state, { payload }) => {
       state.friends = payload;
       return state;
+    },
+    [checkIsFriend.fulfilled]: (state, { payload }) => {
+      state.isFriend = payload;
+      return state;
+    },
+    [sendFriendRequest.fulfilled]: (state) => {
+      state.requestSent = true;
+    },
+    [removeFriend.fulfilled]: (state) => {
+      state.isFriend = "";
     },
     [getMyProfile.fulfilled]: (state, { payload }) => {
       state.myProfile = payload;
@@ -81,7 +141,7 @@ export const profileSlice = createSlice({
   },
 });
 
-// export const { getTotalNumberOfFriends } = profileSlice.actions;
+export const { setRequestSent } = profileSlice.actions;
 
 export const profileSelector = (state) => state.profile;
 

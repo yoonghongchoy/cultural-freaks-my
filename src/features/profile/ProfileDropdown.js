@@ -13,7 +13,7 @@ const ProfileDropdown = () => {
 
   return (
     <div className="absolute top-16 right-1.5 w-32 origin-top-right">
-      <div className="flex justify-center items-center py-2 bg-white rounded-md shadow-lg dark-mode:bg-gray-700">
+      <div className="flex justify-center items-center py-2 bg-white rounded-md shadow-lg">
         <button
           className="flex justify-center items-center w-full"
           onClick={() => logout()}

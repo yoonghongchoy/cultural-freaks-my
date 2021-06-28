@@ -11,13 +11,18 @@ import FriendPanel from "./panel/FriendPanel";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  checkIsFriend,
   getFriends,
   getMyProfile,
   getUserProfile,
   profileSelector,
+  removeFriend,
+  sendFriendRequest,
+  setRequestSent,
 } from "./profileSlice";
-import { getPosts, postSelector } from "../home/postSlice";
+import { clearPostState, getPosts, postSelector } from "../home/postSlice";
 import ProfileDropdown from "./ProfileDropdown";
+import Search from "../search/Search";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -25,25 +30,44 @@ const Profile = () => {
   const { userId } = useParams();
   // 1: Posts panel, 2: Friends panel
   const [panel, setPanel] = React.useState(1);
-  const { posts } = useSelector(postSelector);
-  const { friends, myProfile, userProfile } = useSelector(profileSelector);
+  const { posts, isGetPostsSuccess } = useSelector(postSelector);
+  const { friends, myProfile, userProfile, requestSent, isFriend } =
+    useSelector(profileSelector);
   const [isSameUser, setIsSameUser] = React.useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = React.useState(false);
 
   React.useEffect(() => {
+    setIsSameUser(false);
+    dispatch(setRequestSent(false));
+    dispatch(checkIsFriend(userId));
     dispatch(getMyProfile());
     dispatch(getUserProfile(userId));
     dispatch(getFriends({ userId, status: "accepted" }));
     dispatch(getPosts(userId));
-  }, []);
+    dispatch(clearPostState());
+  }, [userId]);
+
+  React.useEffect(() => {}, [
+    isSameUser,
+    isGetPostsSuccess,
+    posts,
+    friends,
+    requestSent,
+  ]);
 
   React.useEffect(() => {
-    if (myProfile !== null && userProfile !== null) {
-      if (myProfile._id === userProfile._id) {
+    if (!isFriend) {
+      dispatch(getFriends({ userId, status: "accepted" }));
+    }
+  }, [isFriend]);
+
+  React.useEffect(() => {
+    if (myProfile !== null) {
+      if (myProfile._id === userId) {
         setIsSameUser(true);
       }
     }
-  }, [posts, friends, userProfile, myProfile]);
+  }, [userId, myProfile]);
 
   const getFullName = () => {
     if (userProfile === null) return;
@@ -61,7 +85,7 @@ const Profile = () => {
             >
               CulturalFreaksMY
             </h1>
-            <input placeholder="Search bar" className="h-10 p-4 w-3/5" />
+            <Search />
             <div className="flex items-center space-x-4 text-2xl">
               <FontAwesomeIcon icon={faPlus} className="cursor-pointer" />
               <FontAwesomeIcon
@@ -69,7 +93,10 @@ const Profile = () => {
                 className="cursor-pointer"
               />
               <FontAwesomeIcon icon={faBell} className="cursor-pointer" />
-              <div className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer">
+              <div
+                className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
+                onClick={() => history.push(`/profile/${myProfile._id}`)}
+              >
                 <img
                   alt="Jack"
                   src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
@@ -112,9 +139,32 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="w-32">
-                  {!isSameUser && (
-                    <button className="w-full bg-yellow-500 text-white p-3 rounded-lg font-semibold text-lg">
+                  {!isSameUser && !isFriend && !requestSent && (
+                    <button
+                      className="w-full bg-yellow-500 text-white p-3 rounded-lg font-semibold text-lg"
+                      onClick={() => {
+                        dispatch(sendFriendRequest(userId));
+                      }}
+                    >
                       Add friend
+                    </button>
+                  )}
+                  {isFriend.status === "accepted" && (
+                    <button
+                      className="w-full bg-red-500 text-white p-3 rounded-lg font-semibold text-lg"
+                      onClick={() => {
+                        dispatch(removeFriend(isFriend._id));
+                      }}
+                    >
+                      Unfriend
+                    </button>
+                  )}
+                  {(requestSent || isFriend.status === "pending") && (
+                    <button
+                      className="w-full bg-gray-400 text-white p-3 rounded-lg font-semibold text-lg"
+                      disabled
+                    >
+                      Request sent
                     </button>
                   )}
                 </div>
@@ -138,7 +188,12 @@ const Profile = () => {
                 </span>
               </div>
               <div className="mx-auto">
-                {panel === 1 && <PostPanel posts={posts} />}
+                {panel === 1 && (
+                  <PostPanel
+                    posts={posts}
+                    isGetPostsSuccess={isGetPostsSuccess}
+                  />
+                )}
                 {panel === 2 && <FriendPanel friends={friends} />}
               </div>
             </div>

@@ -60,7 +60,7 @@ const Post = ({ post }) => {
   };
 
   return (
-    <div className="flex flex-col bg-gray-200 p-4">
+    <div className="max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-5xl flex flex-col bg-gray-200 p-4">
       <div className="flex items-center space-x-4">
         <div className="w-10 h-10 rounded-full bg-black overflow-hidden">
           <img
