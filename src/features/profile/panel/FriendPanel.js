@@ -1,15 +1,21 @@
 import React from "react";
 
-const FriendPanel = ({ friends }) => {
-  React.useEffect(() => {
-    console.log(friends);
-  }, [friends]);
+const FriendPanel = ({ friends, userId }) => {
+  React.useEffect(() => {}, [friends]);
 
   return (
     <div>
       {friends.length > 0 && (
         <div className="grid grid-cols-2 gap-x-32 gap-y-6">
           {friends.map((friend) => {
+            let user = "";
+
+            if (friend.user1._id !== userId) {
+              user = friend.user1;
+            } else {
+              user = friend.user2;
+            }
+
             return (
               <div className="flex items-center space-x-6 cursor-pointer">
                 <div className="w-16 h-16 rounded-full bg-black overflow-hidden">
@@ -20,7 +26,7 @@ const FriendPanel = ({ friends }) => {
                   />
                 </div>
                 <div className="flex flex-col text-left">
-                  <span>Lucius Choy</span>
+                  <span>{user.firstName + " " + user.surname}</span>
                   <span className="text-sm">1 mutual friends</span>
                 </div>
               </div>

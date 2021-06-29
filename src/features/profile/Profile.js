@@ -194,7 +194,9 @@ const Profile = () => {
                     isGetPostsSuccess={isGetPostsSuccess}
                   />
                 )}
-                {panel === 2 && <FriendPanel friends={friends} />}
+                {panel === 2 && (
+                  <FriendPanel friends={friends} userId={userId} />
+                )}
               </div>
             </div>
           </div>
