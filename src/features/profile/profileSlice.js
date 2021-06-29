@@ -65,6 +65,28 @@ export const sendFriendRequest = createAsyncThunk(
   }
 );
 
+export const updateFriendRequest = createAsyncThunk(
+  "profile/updateFriendRequest",
+  async (data, thunkAPI) => {
+    try {
+      const { id, status } = data;
+
+      const response = await axios.patch(
+        `${url}/updateFriendRequest`,
+        {
+          id,
+          status,
+        },
+        { headers }
+      );
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
 export const removeFriend = createAsyncThunk(
   "profile/removeFriend",
   async (data, thunkAPI) => {

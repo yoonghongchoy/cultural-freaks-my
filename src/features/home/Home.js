@@ -1,12 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBell,
-  faCaretDown,
-  faPlus,
-  faTimes,
-  faUserFriends,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBell, faCaretDown, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Post from "./post/Post";
 import CreatePost from "./createPost/CreatePost";
 import {
@@ -19,8 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { getMyProfile, profileSelector } from "../profile/profileSlice";
 import ProfileDropdown from "../profile/ProfileDropdown";
-import { searchSelector, setSearchQuery } from "../search/searchSlice";
 import Search from "../search/Search";
+import Friend from "./Friend";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -63,10 +57,7 @@ const Home = () => {
                 className="cursor-pointer"
                 onClick={() => dispatch(setShowCreateDialog(!showCreateDialog))}
               />
-              <FontAwesomeIcon
-                icon={faUserFriends}
-                className="cursor-pointer"
-              />
+              <Friend userId={userId} />
               <FontAwesomeIcon icon={faBell} className="cursor-pointer" />
               <div
                 className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
