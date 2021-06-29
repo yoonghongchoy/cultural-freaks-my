@@ -3,10 +3,6 @@ import axios from "axios";
 
 const url = "http://localhost:8080/post";
 
-const headers = {
-  Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-};
-
 const initialState = {
   showCreateDialog: false,
   posts: [],
@@ -22,6 +18,9 @@ export const getPosts = createAsyncThunk(
   "post/getPosts",
   async (data, thunkAPI) => {
     try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
       const endpoint = data ? `${url}?userId=${data}` : url;
       const response = await axios.get(endpoint, { headers });
       return response.data;
@@ -36,6 +35,10 @@ export const createPosts = createAsyncThunk(
   "post/createPost",
   async (data, thunkAPI) => {
     try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
+
       await axios.post(url, data, { headers });
     } catch (e) {
       console.log(e.response.data);

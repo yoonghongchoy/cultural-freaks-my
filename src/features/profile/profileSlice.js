@@ -4,10 +4,6 @@ import axios from "axios";
 const url = "http://localhost:8080/friend";
 const userUrl = "http://localhost:8080/auth/user";
 
-const headers = {
-  Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-};
-
 const initialState = {
   friends: [],
   myProfile: null,
@@ -19,7 +15,11 @@ const initialState = {
 export const getFriends = createAsyncThunk(
   "profile/getFriends",
   async (data, thunkAPI) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    };
     const { userId, status } = data;
+
     try {
       const response = await axios.get(
         `${url}?userId=${userId}&status=${status}`,
@@ -37,6 +37,9 @@ export const checkIsFriend = createAsyncThunk(
   "profile/checkIsFriend",
   async (data, thunkAPI) => {
     try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
       const response = await axios.get(`${url}/isFriend/${data}`, { headers });
       return response.data;
     } catch (e) {
@@ -50,6 +53,9 @@ export const sendFriendRequest = createAsyncThunk(
   "profile/sendFriendRequest",
   async (data, thunkAPI) => {
     try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
       const response = await axios.post(
         url,
         {
@@ -70,6 +76,9 @@ export const updateFriendRequest = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const { id, status } = data;
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
 
       const response = await axios.patch(
         `${url}/updateFriendRequest`,
@@ -91,6 +100,9 @@ export const removeFriend = createAsyncThunk(
   "profile/removeFriend",
   async (data, thunkAPI) => {
     try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
       const response = await axios.delete(`${url}/${data}`, { headers });
       return response.data;
     } catch (e) {
@@ -104,6 +116,9 @@ export const getMyProfile = createAsyncThunk(
   "profile/getMyProfile",
   async (data, thunkAPI) => {
     try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
       const response = await axios.get(userUrl, { headers });
       return response.data;
     } catch (e) {
@@ -117,6 +132,9 @@ export const getUserProfile = createAsyncThunk(
   "profile/getUserProfile",
   async (data, thunkAPI) => {
     try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
       const response = await axios.get(`${userUrl}/${data}`, { headers });
       return response.data;
     } catch (e) {

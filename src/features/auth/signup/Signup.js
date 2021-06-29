@@ -95,8 +95,8 @@ const Signup = () => {
     }
 
     if (isSuccess) {
+      toast.success("Please activate your account.");
       dispatch(clearState());
-      history.push("/");
     }
   }, [isError, isSuccess]);
 
