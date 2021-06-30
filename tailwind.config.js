@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       width: {
-        "create-post-container": "35rem",
+        "create-post-container": "28rem",
         "search-bar": "40rem",
         84: "22rem",
       },

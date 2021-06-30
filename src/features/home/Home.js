@@ -16,6 +16,7 @@ import ProfileDropdown from "../profile/ProfileDropdown";
 import Search from "../search/Search";
 import Friend from "./Friend";
 import Notification from "./Notification";
+import { stateName } from "../../constants/state";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -26,25 +27,6 @@ const Home = () => {
   const [showProfileDropdown, setShowProfileDropdown] = React.useState(false);
   const [panelName, setPanelName] = React.useState("Recent");
   const [toggleStateList, setToggleStateList] = React.useState(false);
-
-  const stateName = [
-    "Johor",
-    "Kedah",
-    "Kelantan",
-    "Melaka",
-    "Negeri Sembilan",
-    "Pahang",
-    "Perak",
-    "Perlis",
-    "Pulau Pinang",
-    "Sabah",
-    "Sarawak",
-    "Selangor",
-    "Terengganu",
-    "Kuala Lumpur",
-    "Labuan",
-    "Putrajaya",
-  ];
 
   React.useEffect(() => {
     dispatch(getPosts({}));
