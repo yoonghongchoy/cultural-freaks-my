@@ -20,9 +20,17 @@ import {
   sendFriendRequest,
   setRequestSent,
 } from "./profileSlice";
-import { clearPostState, getPosts, postSelector } from "../home/postSlice";
+import {
+  clearPostState,
+  getPosts,
+  postSelector,
+  setShowCreateDialog,
+} from "../home/postSlice";
 import ProfileDropdown from "./ProfileDropdown";
 import Search from "../search/Search";
+import Friend from "../home/Friend";
+import Notification from "../home/Notification";
+import CreatePost from "../home/createPost/CreatePost";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -30,7 +38,8 @@ const Profile = () => {
   const { userId } = useParams();
   // 1: Posts panel, 2: Friends panel
   const [panel, setPanel] = React.useState(1);
-  const { posts, isGetPostsSuccess } = useSelector(postSelector);
+  const { showCreateDialog, posts, isGetPostsSuccess } =
+    useSelector(postSelector);
   const { friends, myProfile, userProfile, requestSent, isFriend } =
     useSelector(profileSelector);
   const [isSameUser, setIsSameUser] = React.useState(false);
@@ -87,15 +96,18 @@ const Profile = () => {
             </h1>
             <Search />
             <div className="flex items-center space-x-4 text-2xl">
-              <FontAwesomeIcon icon={faPlus} className="cursor-pointer" />
               <FontAwesomeIcon
-                icon={faUserFriends}
+                icon={faPlus}
                 className="cursor-pointer"
+                onClick={() => dispatch(setShowCreateDialog(!showCreateDialog))}
               />
-              <FontAwesomeIcon icon={faBell} className="cursor-pointer" />
+              <Friend userId={userId} />
+              <Notification />
               <div
                 className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
-                onClick={() => history.push(`/profile/${myProfile._id}`)}
+                onClick={() => {
+                  history.push(`profile/${userId}`);
+                }}
               >
                 <img
                   alt="Jack"
@@ -202,6 +214,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <div>{showCreateDialog && <CreatePost />}</div>
       {showProfileDropdown && <ProfileDropdown />}
     </div>
   );

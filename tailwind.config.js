@@ -6,6 +6,7 @@ module.exports = {
       width: {
         "create-post-container": "35rem",
         "search-bar": "40rem",
+        84: "22rem",
       },
     },
   },

@@ -50,13 +50,13 @@ const Login = () => {
   return (
     <div>
       <div
-        className="fixed p-20 h-screen w-screen flex flex-col-reverse md:flex-row items-center justify-center bg-no-repeat bg-cover"
+        className="fixed h-screen w-screen flex flex-col-reverse md:flex-row items-center bg-no-repeat bg-cover"
         style={{
           backgroundImage: `url(${backgroundImage})`,
         }}
       >
         <Toaster position="top-right" reverseOrder={false} />
-        <div className="container mx-auto flex flex-col items-center">
+        <div className="container w-96 ml-32 flex flex-col items-center">
           <div className="shadow-lg w-80 p-4 flex flex-col bg-white rounded-lg">
             <form onSubmit={handleSubmit(onSubmit)}>
               <input
@@ -100,11 +100,11 @@ const Login = () => {
             </button>
           </div>
         </div>
-        <div className="content text-3xl text-center md:text-left">
-          <h1 className="text-5xl text-yellow-500 font-bold">
-            CulturalFreaksMY
-          </h1>
-          <p className="text-white">Slogan...</p>
+        <div className="content ml-10 text-3xl text-center md:text-left">
+          <h1 className="text-5xl text-white font-bold">CulturalFreaksMY</h1>
+          <p className="w-84 text-white break-words">
+            Preserve Cultural Heritage for future generations..
+          </p>
         </div>
       </div>
       {showSignup && <Signup />}
