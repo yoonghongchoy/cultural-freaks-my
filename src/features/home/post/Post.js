@@ -1,11 +1,24 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { ReactComponent as ShareIcon } from "../../../assets/icons/share.svg";
 import moment from "moment";
 import Slider from "react-slick";
+import { likePost, unlikePost } from "../postSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { profileSelector } from "../../profile/profileSlice";
+import { useHistory, useLocation } from "react-router-dom";
+import { createNotification } from "../notificationSlice";
 
 const Post = ({ post }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
+  const { myProfile } = useSelector(profileSelector);
+  const [isLike, setIsLike] = React.useState(false);
+  const [likes, setLikes] = React.useState(post.likes.length);
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -59,10 +72,27 @@ const Post = ({ post }) => {
     return `${post.content}${hashtags}`;
   };
 
+  const redirectToProfile = () => {
+    if (location.pathname.includes("profile/")) {
+      history.push(`${post.user._id}`);
+    } else {
+      history.push(`profile/${post.user._id}`);
+    }
+  };
+
+  React.useEffect(() => {
+    if (post.likes.length > 0 && post.likes.includes(myProfile._id)) {
+      setIsLike(true);
+    }
+  }, [post]);
+
   return (
     <div className="max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-5xl flex flex-col bg-gray-200 p-4">
       <div className="flex items-center space-x-4">
-        <div className="w-10 h-10 rounded-full bg-black overflow-hidden">
+        <div
+          className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
+          onClick={() => redirectToProfile()}
+        >
           <img
             alt="Jack"
             src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
@@ -70,7 +100,12 @@ const Post = ({ post }) => {
           />
         </div>
         <div className="flex flex-col text-left">
-          <span>{getFullName()}</span>
+          <span
+            className="hover:underline cursor-pointer"
+            onClick={() => redirectToProfile()}
+          >
+            {getFullName()}
+          </span>
           <span className="text-sm">{getDuration()}</span>
         </div>
       </div>
@@ -102,11 +137,38 @@ const Post = ({ post }) => {
       </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <FontAwesomeIcon
-            icon={faHeart}
-            size="2x"
-            className="cursor-pointer"
-          />
+          {!isLike && (
+            <FontAwesomeIcon
+              icon={faHeart}
+              size="2x"
+              className="cursor-pointer"
+              onClick={() => {
+                setIsLike(!isLike);
+                dispatch(likePost(post._id));
+                setLikes(likes + 1);
+                if (myProfile._id !== post.user._id) {
+                  dispatch(
+                    createNotification({
+                      notifier: post.user._id,
+                      content: `${myProfile.firstName} ${myProfile.surname} likes your post`,
+                    })
+                  );
+                }
+              }}
+            />
+          )}
+          {isLike && (
+            <FontAwesomeIcon
+              icon={faHeartSolid}
+              size="2x"
+              className="cursor-pointer text-red-600"
+              onClick={() => {
+                setIsLike(!isLike);
+                dispatch(unlikePost(post._id));
+                setLikes(likes - 1);
+              }}
+            />
+          )}
           <FontAwesomeIcon
             icon={faComment}
             size="2x"
@@ -114,11 +176,17 @@ const Post = ({ post }) => {
           />
           <ShareIcon className="h-8 w-8 cursor-pointer" />
         </div>
-        <span>XXX Likes</span>
+        <span>{likes > 1 ? `${likes} likes` : `${likes} like`}</span>
       </div>
       <div className="flex flex-col my-2 text-left">
         <div className="text-sm">
-          <span>{getFullName() + ": "}</span>
+          <span
+            className="hover:underline cursor-pointer"
+            onClick={() => redirectToProfile()}
+          >
+            {getFullName()}
+          </span>
+          <span>: </span>
           <span>{getCaption()}</span>
         </div>
         <div className="text-sm">

@@ -47,6 +47,40 @@ export const createPosts = createAsyncThunk(
   }
 );
 
+export const likePost = createAsyncThunk(
+  "post/likePost",
+  async (data, thunkAPI) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
+      const endpoint = `${url}/like/${data}`;
+      const response = await axios.get(endpoint, { headers });
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export const unlikePost = createAsyncThunk(
+  "post/unlikePost",
+  async (data, thunkAPI) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
+      const endpoint = `${url}/unlike/${data}`;
+      const response = await axios.delete(endpoint, { headers });
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
 export const postSlice = createSlice({
   name: "post",
   initialState,

@@ -15,6 +15,7 @@ import { getMyProfile, profileSelector } from "../profile/profileSlice";
 import ProfileDropdown from "../profile/ProfileDropdown";
 import Search from "../search/Search";
 import Friend from "./Friend";
+import Notification from "./Notification";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ const Home = () => {
                 onClick={() => dispatch(setShowCreateDialog(!showCreateDialog))}
               />
               <Friend userId={userId} />
-              <FontAwesomeIcon icon={faBell} className="cursor-pointer" />
+              <Notification />
               <div
                 className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
                 onClick={() => {

@@ -1,6 +1,9 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 const FriendPanel = ({ friends, userId }) => {
+  const history = useHistory();
+
   React.useEffect(() => {}, [friends]);
 
   return (
@@ -17,7 +20,10 @@ const FriendPanel = ({ friends, userId }) => {
             }
 
             return (
-              <div className="flex items-center space-x-6 cursor-pointer">
+              <div
+                className="flex items-center space-x-6 cursor-pointer"
+                onClick={() => history.push(`/profile/${user._id}`)}
+              >
                 <div className="w-16 h-16 rounded-full bg-black overflow-hidden">
                   <img
                     alt="Jack"

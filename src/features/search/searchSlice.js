@@ -3,10 +3,6 @@ import axios from "axios";
 
 const url = "http://localhost:8080/search";
 
-const headers = {
-  Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-};
-
 const initialState = {
   searchResult: {
     users: [],
@@ -19,6 +15,9 @@ export const getSearch = createAsyncThunk(
   "search/getSearch",
   async (data, thunkAPI) => {
     try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
       const limit = 5;
       // const offset = 1;
 
