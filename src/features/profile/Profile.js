@@ -43,7 +43,7 @@ const Profile = () => {
     dispatch(getMyProfile());
     dispatch(getUserProfile(userId));
     dispatch(getFriends({ userId, status: "accepted" }));
-    dispatch(getPosts(userId));
+    dispatch(getPosts({ userId }));
     dispatch(clearPostState());
   }, [userId]);
 

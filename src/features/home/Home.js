@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faCaretDown, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Post from "./post/Post";
 import CreatePost from "./createPost/CreatePost";
 import {
@@ -24,9 +24,30 @@ const Home = () => {
   const { myProfile } = useSelector(profileSelector);
   const [userId, setUserId] = React.useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = React.useState(false);
+  const [panelName, setPanelName] = React.useState("Recent");
+  const [toggleStateList, setToggleStateList] = React.useState(false);
+
+  const stateName = [
+    "Johor",
+    "Kedah",
+    "Kelantan",
+    "Melaka",
+    "Negeri Sembilan",
+    "Pahang",
+    "Perak",
+    "Perlis",
+    "Pulau Pinang",
+    "Sabah",
+    "Sarawak",
+    "Selangor",
+    "Terengganu",
+    "Kuala Lumpur",
+    "Labuan",
+    "Putrajaya",
+  ];
 
   React.useEffect(() => {
-    dispatch(getPosts());
+    dispatch(getPosts({}));
     dispatch(clearPostState());
     dispatch(getMyProfile());
   }, []);
@@ -39,7 +60,7 @@ const Home = () => {
 
   React.useEffect(() => {
     if (!showCreateDialog) {
-      dispatch(getPosts());
+      dispatch(getPosts({}));
     }
   }, [showCreateDialog]);
 
@@ -48,7 +69,13 @@ const Home = () => {
       <div className="fixed flex h-screen w-screen">
         <div className="flex-1 flex flex-col overflow-hidden">
           <header className="flex justify-between items-center bg-yellow-500 h-16 p-6 space-x-10">
-            <h1 className="text-2xl font-bold cursor-pointer">
+            <h1
+              className="text-2xl font-bold cursor-pointer"
+              onClick={() => {
+                setPanelName("Recent");
+                dispatch(getPosts({}));
+              }}
+            >
               CulturalFreaksMY
             </h1>
             <Search />
@@ -84,23 +111,53 @@ const Home = () => {
             style={{ height: "calc(100% - 4rem)" }}
           >
             <div className="flex flex-col w-64 border-r-2 border-gray-400 p-6">
-              <button className="mb-5 px-3 py-1.5 text-left bg-gray-400">
-                Group
-              </button>
-              <button className="mb-5 px-3 py-1.5 text-left bg-gray-400">
+              <button
+                className="mb-5 px-3 py-1.5 text-left bg-gray-400"
+                onClick={() => {
+                  setPanelName("Liked Posts");
+                  dispatch(getPosts({ sortBy: "isLiked" }));
+                }}
+              >
                 Liked Posts
               </button>
-              <button className="mb-5 px-3 py-1.5 text-left bg-gray-400">
+              <button
+                className="mb-5 px-3 py-1.5 text-left bg-gray-400"
+                onClick={() => {
+                  setPanelName("Popular Posts");
+                  dispatch(getPosts({ sortBy: "popular" }));
+                }}
+              >
                 Popular Posts
               </button>
-              <button className="mb-5 px-3 py-1.5 text-left bg-gray-400">
-                States
+              <button
+                className="px-3 py-1.5 text-left bg-gray-400 cursor-pointer"
+                onClick={() => setToggleStateList(!toggleStateList)}
+              >
+                State
               </button>
+              {toggleStateList && (
+                <div className="flex flex-col space-y-1 bg-white">
+                  {stateName.map((state, index) => {
+                    return (
+                      <button
+                        key={index}
+                        className="w-full text-left px-3 hover:bg-gray-300"
+                        onClick={() => {
+                          setPanelName(state);
+                          dispatch(getPosts({ state }));
+                        }}
+                      >
+                        {state}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <div className="flex flex-col w-full">
               <div className="flex items-center h-16 border-b-2 border-gray-400 p-4">
                 <button className="px-3 py-1.5 text-left bg-gray-400">
-                  Recent
+                  {panelName}
                 </button>
               </div>
               <div className="flex flex-col h-full overflow-x-hidden overflow-y-auto py-6 px-20 space-y-3">
@@ -116,7 +173,6 @@ const Home = () => {
       </div>
       <div>{showCreateDialog && <CreatePost />}</div>
       {showProfileDropdown && <ProfileDropdown />}
-      {/*{searchQuery && <Search />}*/}
     </div>
   );
 };

@@ -21,7 +21,62 @@ export const getPosts = createAsyncThunk(
       const headers = {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       };
-      const endpoint = data ? `${url}?userId=${data}` : url;
+      const {
+        limit,
+        offset,
+        sortBy,
+        userId,
+        state,
+        keyword1,
+        keyword2,
+        keyword3,
+      } = data;
+      let endpoint = url;
+      const queryParam = [];
+      if (limit) {
+        queryParam.push(`limit=${limit}`);
+      }
+
+      if (offset) {
+        queryParam.push(`offset=${offset}`);
+      }
+
+      if (sortBy) {
+        queryParam.push(`sortBy=${sortBy}`);
+      }
+
+      if (userId) {
+        queryParam.push(`userId=${userId}`);
+      }
+
+      if (state) {
+        queryParam.push(`state=${state}`);
+      }
+
+      if (keyword1) {
+        queryParam.push(`keyword1=${keyword1}`);
+      }
+
+      if (keyword2) {
+        queryParam.push(`keyword2=${keyword2}`);
+      }
+
+      if (keyword3) {
+        queryParam.push(`keyword3=${keyword3}`);
+      }
+
+      if (queryParam.length > 0) {
+        endpoint += "?";
+
+        for (let i = 0; i < queryParam.length; i++) {
+          if (i !== queryParam.length - 1) {
+            endpoint += `${queryParam[i]}&`;
+          } else {
+            endpoint += queryParam[i];
+          }
+        }
+      }
+
       const response = await axios.get(endpoint, { headers });
       return response.data;
     } catch (e) {
