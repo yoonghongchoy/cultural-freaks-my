@@ -94,11 +94,20 @@ const Post = ({ post }) => {
             className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
             onClick={() => redirectToProfile()}
           >
-            <img
-              alt="Jack"
-              src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-              className="object-cover object-center"
-            />
+            {post.user && !post.user.profilePicture && (
+              <img
+                alt="Jack"
+                src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
+                className="object-cover object-center"
+              />
+            )}
+            {post.user && post.user.profilePicture && (
+              <img
+                alt={post.user.firstName}
+                src={`data:image/png;base64, ${post.user.profilePicture}`}
+                className="object-cover object-center"
+              />
+            )}
           </div>
           <div className="flex flex-col text-left">
             <span

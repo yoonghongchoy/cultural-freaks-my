@@ -1,11 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBell,
-  faCaretDown,
-  faPlus,
-  faUserFriends,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faPlus } from "@fortawesome/free-solid-svg-icons";
 import PostPanel from "./panel/PostPanel";
 import FriendPanel from "./panel/FriendPanel";
 import { useHistory, useLocation, useParams } from "react-router-dom";
@@ -31,6 +26,8 @@ import Search from "../search/Search";
 import Friend from "../home/Friend";
 import Notification from "../home/Notification";
 import CreatePost from "../home/createPost/CreatePost";
+import DeletePost from "../home/deletePost/DeletePost";
+import EditProfile from "./editProfile/EditProfile";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -39,12 +36,13 @@ const Profile = () => {
   const { userId } = useParams();
   // 1: Posts panel, 2: Friends panel
   const [panel, setPanel] = React.useState(1);
-  const { showCreateDialog, posts, isGetPostsSuccess } =
+  const { showCreateDialog, posts, isGetPostsSuccess, openDeleteModal } =
     useSelector(postSelector);
   const { friends, myProfile, userProfile, requestSent, isFriend } =
     useSelector(profileSelector);
   const [isSameUser, setIsSameUser] = React.useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = React.useState(false);
+  const [editProfile, setEditProfile] = React.useState(false);
 
   React.useEffect(() => {
     setIsSameUser(false);
@@ -114,11 +112,20 @@ const Profile = () => {
                   }
                 }}
               >
-                <img
-                  alt="Jack"
-                  src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                  className="object-cover object-center"
-                />
+                {userProfile && !userProfile.profilePicture && (
+                  <img
+                    alt="Jack"
+                    src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
+                    className="object-cover object-center"
+                  />
+                )}
+                {userProfile && userProfile.profilePicture && (
+                  <img
+                    alt={userProfile.firstName}
+                    src={`data:image/png;base64, ${userProfile.profilePicture}`}
+                    className="object-cover object-center"
+                  />
+                )}
               </div>
               <FontAwesomeIcon
                 icon={faCaretDown}
@@ -130,13 +137,21 @@ const Profile = () => {
           <div className="w-full h-full overflow-y-auto bg-yellow-50">
             <div className="flex flex-col">
               <div className="flex items-center mx-auto p-4 space-x-32 border-b border-gray-400">
-                <div className="w-40 h-40 rounded-full bg-black overflow-hidden cursor-pointer">
-                  <img
-                    alt="Jack"
-                    src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                    title="Change profile picture"
-                    className="object-cover object-center"
-                  />
+                <div className="w-40 h-40 rounded-full bg-black overflow-hidden">
+                  {userProfile && !userProfile.profilePicture && (
+                    <img
+                      alt="Jack"
+                      src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
+                      className="object-cover object-center"
+                    />
+                  )}
+                  {userProfile && userProfile.profilePicture && (
+                    <img
+                      alt={userProfile.firstName}
+                      src={`data:image/png;base64, ${userProfile.profilePicture}`}
+                      className="object-cover object-center"
+                    />
+                  )}
                 </div>
                 <div className="flex flex-col text-left space-y-5">
                   <div className="flex items-center space-x-16">
@@ -156,6 +171,14 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="w-32">
+                  {isSameUser && (
+                    <button
+                      className="w-full bg-yellow-500 text-white p-3 rounded-lg font-semibold text-lg"
+                      onClick={() => setEditProfile(true)}
+                    >
+                      Edit profile
+                    </button>
+                  )}
                   {!isSameUser && !isFriend && !requestSent && (
                     <button
                       className="w-full bg-yellow-500 text-white p-3 rounded-lg font-semibold text-lg"
@@ -221,6 +244,8 @@ const Profile = () => {
       </div>
       <div>{showCreateDialog && <CreatePost />}</div>
       {showProfileDropdown && <ProfileDropdown />}
+      {openDeleteModal && <DeletePost />}
+      {editProfile && <EditProfile onClose={setEditProfile} />}
     </div>
   );
 };

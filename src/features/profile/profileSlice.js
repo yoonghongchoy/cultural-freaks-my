@@ -6,6 +6,7 @@ const userUrl = "http://localhost:8080/auth/user";
 
 const initialState = {
   friends: [],
+  friendRequests: [],
   myProfile: null,
   userProfile: null,
   requestSent: false,
@@ -25,6 +26,25 @@ export const getFriends = createAsyncThunk(
         `${url}?userId=${userId}&status=${status}`,
         { headers }
       );
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export const getFriendRequest = createAsyncThunk(
+  "profile/getFriendRequest",
+  async (data, thunkAPI) => {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    };
+
+    try {
+      const response = await axios.get(`${url}?userId=${data}&status=pending`, {
+        headers,
+      });
       return response.data;
     } catch (e) {
       console.log(e.response.data);
@@ -144,6 +164,24 @@ export const getUserProfile = createAsyncThunk(
   }
 );
 
+export const editProfile = createAsyncThunk(
+  "profile/editProfile",
+  async (data, thunkAPI) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
+      const response = await axios.post(`${userUrl}/editProfile`, data, {
+        headers,
+      });
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
 export const profileSlice = createSlice({
   name: "profile",
   initialState,
@@ -158,6 +196,10 @@ export const profileSlice = createSlice({
   extraReducers: {
     [getFriends.fulfilled]: (state, { payload }) => {
       state.friends = payload;
+      return state;
+    },
+    [getFriendRequest.fulfilled]: (state, { payload }) => {
+      state.friendRequests = payload;
       return state;
     },
     [checkIsFriend.fulfilled]: (state, { payload }) => {
@@ -176,6 +218,11 @@ export const profileSlice = createSlice({
     },
     [getUserProfile.fulfilled]: (state, { payload }) => {
       state.userProfile = payload;
+      return state;
+    },
+    [editProfile.fulfilled]: (state, { payload }) => {
+      state.userProfile = payload;
+      state.myProfile = payload;
       return state;
     },
   },

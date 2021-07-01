@@ -6,13 +6,11 @@ import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { toast, Toaster } from "react-hot-toast";
-import { useHistory } from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useDispatch();
   const { isSuccess, isError, errorMessage, showSignup } =
     useSelector(authSelector);
-  const history = useHistory();
   const { register, handleSubmit } = useForm();
   const current = moment().toObject();
   const currentMonth = current.months + 1;
@@ -110,7 +108,7 @@ const Signup = () => {
               <h1 className="text-4xl font-bold mb-1">Sign Up</h1>
               <FontAwesomeIcon
                 icon={faTimes}
-                className="text-gray-500"
+                className="text-gray-500 cursor-pointer"
                 onClick={() => dispatch(setShowSignup(!showSignup))}
               />
             </div>

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getFriends,
+  getFriendRequest,
   profileSelector,
   removeFriend,
   updateFriendRequest,
@@ -12,15 +12,15 @@ import {
 const Friend = ({ userId }) => {
   const dispatch = useDispatch();
   const [showDropdown, setShowDropdown] = React.useState(false);
-  const { friends } = useSelector(profileSelector);
+  const { friendRequests } = useSelector(profileSelector);
 
   React.useEffect(() => {
     if (showDropdown) {
-      dispatch(getFriends({ userId, status: "pending" }));
+      dispatch(getFriendRequest(userId));
     }
   }, [showDropdown]);
 
-  React.useEffect(() => {}, [friends]);
+  React.useEffect(() => {}, [friendRequests]);
 
   return (
     <div>
@@ -32,9 +32,9 @@ const Friend = ({ userId }) => {
       {showDropdown && (
         <div className="absolute top-16 right-1.5 w-80 origin-top-right text-base">
           <div className="flex justify-center items-center p-2 bg-white rounded-md shadow-lg">
-            {friends.length === 0 && <span>No friend request</span>}
-            {friends.length > 0 &&
-              friends.map((friend, index) => {
+            {friendRequests.length === 0 && <span>No friend request</span>}
+            {friendRequests.length > 0 &&
+              friendRequests.map((friend, index) => {
                 let user = "";
 
                 if (friend.user1._id !== userId) {
@@ -70,7 +70,7 @@ const Friend = ({ userId }) => {
                               status: "accepted",
                             })
                           );
-                          dispatch(getFriends({ userId, status: "pending" }));
+                          dispatch(getFriendRequest(userId));
                         }}
                       >
                         <span className="text-sm font-light">Accept</span>
@@ -79,7 +79,7 @@ const Friend = ({ userId }) => {
                         className="w-14 h-8 bg-red-500 rounded-md"
                         onClick={() => {
                           dispatch(removeFriend(friend._id));
-                          dispatch(getFriends({ userId, status: "pending" }));
+                          dispatch(getFriendRequest(userId));
                         }}
                       >
                         <span className="text-sm font-light">Reject</span>

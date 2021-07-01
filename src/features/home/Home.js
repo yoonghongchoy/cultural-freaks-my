@@ -82,11 +82,20 @@ const Home = () => {
                   history.push(`profile/${userId}`);
                 }}
               >
-                <img
-                  alt="Jack"
-                  src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                  className="object-cover object-center"
-                />
+                {myProfile && !myProfile.profilePicture && (
+                  <img
+                    alt="Jack"
+                    src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
+                    className="object-cover object-center"
+                  />
+                )}
+                {myProfile && myProfile.profilePicture && (
+                  <img
+                    alt={myProfile.firstName}
+                    src={`data:image/png;base64, ${myProfile.profilePicture}`}
+                    className="object-cover object-center"
+                  />
+                )}
               </div>
               <FontAwesomeIcon
                 icon={faCaretDown}

@@ -192,8 +192,8 @@ const CreatePost = () => {
                     )}
                     {subCategory.length > 0 && (
                       <div className="flex flex-col">
-                        {subCategory.map((category) => (
-                          <div className="flex justify-between">
+                        {subCategory.map((category, index) => (
+                          <div key={index} className="flex justify-between">
                             <span className="text-sm font-light">
                               {category}
                             </span>
