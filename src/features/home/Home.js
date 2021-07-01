@@ -18,6 +18,7 @@ import Friend from "./Friend";
 import Notification from "./Notification";
 import { stateName } from "../../constants/state";
 import DeletePost from "./deletePost/DeletePost";
+import { subCategoryList } from "../../constants/subCategoryList";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,8 @@ const Home = () => {
   const [showProfileDropdown, setShowProfileDropdown] = React.useState(false);
   const [panelName, setPanelName] = React.useState("Recent");
   const [toggleStateList, setToggleStateList] = React.useState(false);
+  const [keywordList, setKeywordList] = React.useState(subCategoryList);
+  const [keywords, setKeywords] = React.useState(["", "", ""]);
 
   React.useEffect(() => {
     dispatch(getPosts({}));
@@ -141,10 +144,56 @@ const Home = () => {
               )}
             </div>
             <div className="flex flex-col w-full">
-              <div className="flex items-center h-16 border-b-2 border-gray-400 p-4">
-                <button className="px-3 py-1.5 text-left bg-gray-400">
+              <div className="flex flex-col h-auto border-b-2 border-gray-400 p-4 space-y-3">
+                <button className="w-max px-3 py-1.5 text-left bg-gray-400">
                   {panelName}
                 </button>
+                {stateName.includes(panelName) && (
+                  <div className="flex items-center">
+                    {[1, 2, 3].map((item, index) => (
+                      <div
+                        key={index}
+                        className="w-40 mr-4 flex flex-col justify-center"
+                      >
+                        <span>Keyword {item}: </span>
+                        <select
+                          className="h-6 border border-black"
+                          value={keywords[index]}
+                          onChange={(event) => {
+                            keywords[index] = event.target.value;
+                            setKeywords([...keywords]);
+                          }}
+                        >
+                          <option value="" />
+                          {keywordList.map((keyword, index) => (
+                            <option
+                              key={index}
+                              value={keyword}
+                              disabled={keywords.includes(keyword)}
+                            >
+                              {keyword}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    ))}
+                    <button
+                      className="w-max h-10 px-3 py-1.5 ml-8 text-left bg-gray-400"
+                      onClick={() => {
+                        dispatch(
+                          getPosts({
+                            state: panelName,
+                            keyword1: keywords[0],
+                            keyword2: keywords[1],
+                            keyword3: keywords[2],
+                          })
+                        );
+                      }}
+                    >
+                      Search
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="flex flex-col h-full overflow-x-hidden overflow-y-auto py-6 px-20 space-y-3">
                 {posts.length > 0 &&
