@@ -11,7 +11,11 @@ const Notification = () => {
   const wrapperRef = React.useRef(null);
 
   const handleClickOutside = (event) => {
-    if (wrapperRef && !wrapperRef.current.contains(event.target)) {
+    if (
+      wrapperRef &&
+      wrapperRef.current &&
+      !wrapperRef.current.contains(event.target)
+    ) {
       setShowDropdown(false);
     }
   };
@@ -36,7 +40,7 @@ const Notification = () => {
         onClick={() => setShowDropdown(!showDropdown)}
       />
       {showDropdown && (
-        <div className="absolute top-16 right-1.5 w-80 origin-top-right text-base">
+        <div className="absolute top-16 right-1.5 w-80 origin-top-right text-base z-50">
           <div className="flex flex-col justify-center items-center p-2 bg-white rounded-md shadow-lg">
             {notifications.length === 0 && <span>No notification</span>}
             {notifications.length > 0 &&

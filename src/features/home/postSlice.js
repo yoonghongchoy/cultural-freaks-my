@@ -14,6 +14,7 @@ const initialState = {
   errorMessage: null,
   openDeleteModal: false,
   deletePostId: "",
+  postShared: false,
 };
 
 export const getPosts = createAsyncThunk(
@@ -155,6 +156,23 @@ export const deletePost = createAsyncThunk(
   }
 );
 
+export const sharePost = createAsyncThunk(
+  "post/sharePost",
+  async (data, thunkAPI) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
+      const endpoint = `${url}/share/${data}`;
+      const response = await axios.get(endpoint, { headers });
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
 export const postSlice = createSlice({
   name: "post",
   initialState,
@@ -175,6 +193,11 @@ export const postSlice = createSlice({
       const { openDeleteModal, id } = action.payload;
       state.openDeleteModal = openDeleteModal;
       state.deletePostId = id;
+    },
+    clearPostShared: (state) => {
+      state.postShared = false;
+
+      return state;
     },
   },
   extraReducers: {
@@ -208,11 +231,18 @@ export const postSlice = createSlice({
     [deletePost.fulfilled]: (state, { payload }) => {
       state.posts = state.posts.filter((post) => post._id !== payload._id);
     },
+    [sharePost.fulfilled]: (state, { payload }) => {
+      state.postShared = true;
+    },
   },
 });
 
-export const { clearPostState, setShowCreateDialog, setOpenDeleteModal } =
-  postSlice.actions;
+export const {
+  clearPostState,
+  setShowCreateDialog,
+  setOpenDeleteModal,
+  clearPostShared,
+} = postSlice.actions;
 
 export const postSelector = (state) => state.post;
 

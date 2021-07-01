@@ -4,6 +4,7 @@ import { faCaretDown, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Post from "./post/Post";
 import CreatePost from "./createPost/CreatePost";
 import {
+  clearPostShared,
   clearPostState,
   getPosts,
   postSelector,
@@ -23,7 +24,7 @@ import { subCategoryList } from "../../constants/subCategoryList";
 const Home = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { showCreateDialog, posts, openDeleteModal } =
+  const { showCreateDialog, posts, openDeleteModal, postShared } =
     useSelector(postSelector);
   const { myProfile } = useSelector(profileSelector);
   const [userId, setUserId] = React.useState(null);
@@ -38,6 +39,13 @@ const Home = () => {
     dispatch(clearPostState());
     dispatch(getMyProfile());
   }, []);
+
+  React.useEffect(() => {
+    if (postShared) {
+      dispatch(getPosts({}));
+      dispatch(clearPostShared());
+    }
+  }, [postShared]);
 
   React.useEffect(() => {
     if (myProfile) {

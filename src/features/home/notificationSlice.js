@@ -17,7 +17,7 @@ export const createNotification = createAsyncThunk(
 
       await axios.post(
         url,
-        { notifier: data.notifier, content: data.content },
+        { notifier: data.notifier, content: data.content, post: data.post },
         { headers }
       );
     } catch (e) {

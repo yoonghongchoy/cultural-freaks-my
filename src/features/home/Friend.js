@@ -16,7 +16,11 @@ const Friend = ({ userId }) => {
   const wrapperRef = React.useRef(null);
 
   const handleClickOutside = (event) => {
-    if (wrapperRef && !wrapperRef.current.contains(event.target)) {
+    if (
+      wrapperRef &&
+      wrapperRef.current &&
+      !wrapperRef.current.contains(event.target)
+    ) {
       setShowDropdown(false);
     }
   };
@@ -41,7 +45,7 @@ const Friend = ({ userId }) => {
         onClick={() => setShowDropdown(!showDropdown)}
       />
       {showDropdown && (
-        <div className="absolute top-16 right-1.5 w-80 origin-top-right text-base">
+        <div className="absolute top-16 right-1.5 w-80 origin-top-right text-base z-50">
           <div className="flex justify-center items-center p-2 bg-white rounded-md shadow-lg">
             {friendRequests.length === 0 && <span>No friend request</span>}
             {friendRequests.length > 0 &&
