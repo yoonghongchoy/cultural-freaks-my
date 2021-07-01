@@ -9,6 +9,8 @@ const initialState = {
   isError: false,
   errorMessage: "",
   showSignup: false,
+  forgotPasswordSent: false,
+  passwordReset: false,
 };
 
 export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
@@ -39,6 +41,35 @@ export const activateAccount = createAsyncThunk(
     try {
       const response = await axios.get(`${url}/activate?token=${token}`);
       localStorage.setItem("accessToken", response.data.accessToken);
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async (email, thunkAPI) => {
+    try {
+      const response = await axios.get(`${url}/forgot/${email}`);
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async ({ token, email, password }, thunkAPI) => {
+    try {
+      await axios.post(`${url}/reset`, {
+        email,
+        password,
+        token,
+      });
     } catch (e) {
       console.log(e.response.data);
       return thunkAPI.rejectWithValue(e.response.data);
@@ -100,6 +131,12 @@ export const authSlice = createSlice({
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = payload.message;
+    },
+    [forgotPassword.fulfilled]: (state) => {
+      state.forgotPasswordSent = true;
+    },
+    [resetPassword.fulfilled]: (state) => {
+      state.passwordReset = true;
     },
   },
 });

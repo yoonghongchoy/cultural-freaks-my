@@ -90,7 +90,12 @@ const Login = () => {
                 Login
               </button>
             </form>
-            <a className="text-center my-2">Forgot Password?</a>
+            <a
+              href="/forgot"
+              className="w-max self-center text-center my-2 cursor-pointer hover:text-blue-600 hover:underline"
+            >
+              Forgot Password?
+            </a>
             <hr />
             <button
               onClick={() => dispatch(setShowSignup(!showSignup))}
