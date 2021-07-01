@@ -26,7 +26,7 @@ const Notification = () => {
       />
       {showDropdown && (
         <div className="absolute top-16 right-1.5 w-80 origin-top-right text-base">
-          <div className="flex justify-center items-center p-2 bg-white rounded-md shadow-lg">
+          <div className="flex flex-col justify-center items-center p-2 bg-white rounded-md shadow-lg">
             {notifications.length === 0 && <span>No notification</span>}
             {notifications.length > 0 &&
               notifications.map((notification, index) => {

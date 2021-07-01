@@ -5,7 +5,7 @@ import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { ReactComponent as ShareIcon } from "../../../assets/icons/share.svg";
 import moment from "moment";
 import Slider from "react-slick";
-import { deletePost, likePost, unlikePost } from "../postSlice";
+import { likePost, setOpenDeleteModal, unlikePost } from "../postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { profileSelector } from "../../profile/profileSlice";
 import { useHistory, useLocation } from "react-router-dom";
@@ -113,7 +113,11 @@ const Post = ({ post }) => {
         {myProfile._id === post.user._id && (
           <button
             className="border border-black p-1 rounded-md bg-red-500"
-            onClick={() => dispatch(deletePost(post._id))}
+            onClick={() =>
+              dispatch(
+                setOpenDeleteModal({ openDeleteModal: true, id: post._id })
+              )
+            }
           >
             Delete
           </button>

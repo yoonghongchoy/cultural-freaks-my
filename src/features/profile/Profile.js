@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import PostPanel from "./panel/PostPanel";
 import FriendPanel from "./panel/FriendPanel";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkIsFriend,
@@ -35,6 +35,7 @@ import CreatePost from "../home/createPost/CreatePost";
 const Profile = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   const { userId } = useParams();
   // 1: Posts panel, 2: Friends panel
   const [panel, setPanel] = React.useState(1);
@@ -106,7 +107,11 @@ const Profile = () => {
               <div
                 className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
                 onClick={() => {
-                  history.push(`profile/${userId}`);
+                  if (location.pathname.includes("profile/")) {
+                    history.push(`${myProfile._id}`);
+                  } else {
+                    history.push(`profile/${myProfile._id}`);
+                  }
                 }}
               >
                 <img

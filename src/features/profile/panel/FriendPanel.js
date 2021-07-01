@@ -10,7 +10,7 @@ const FriendPanel = ({ friends, userId }) => {
     <div>
       {friends.length > 0 && (
         <div className="grid grid-cols-2 gap-x-32 gap-y-6">
-          {friends.map((friend) => {
+          {friends.map((friend, index) => {
             let user = "";
 
             if (friend.user1._id !== userId) {
@@ -21,6 +21,7 @@ const FriendPanel = ({ friends, userId }) => {
 
             return (
               <div
+                key={index}
                 className="flex items-center space-x-6 cursor-pointer"
                 onClick={() => history.push(`/profile/${user._id}`)}
               >

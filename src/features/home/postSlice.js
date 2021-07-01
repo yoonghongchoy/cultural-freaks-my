@@ -12,6 +12,8 @@ const initialState = {
   isCreatePostsSuccess: false,
   isCreatePostsError: false,
   errorMessage: null,
+  openDeleteModal: false,
+  deletePostId: "",
 };
 
 export const getPosts = createAsyncThunk(
@@ -169,6 +171,11 @@ export const postSlice = createSlice({
     setShowCreateDialog: (state, action) => {
       state.showCreateDialog = action.payload;
     },
+    setOpenDeleteModal: (state, action) => {
+      const { openDeleteModal, id } = action.payload;
+      state.openDeleteModal = openDeleteModal;
+      state.deletePostId = id;
+    },
   },
   extraReducers: {
     [getPosts.fulfilled]: (state, { payload }) => {
@@ -199,14 +206,13 @@ export const postSlice = createSlice({
       state.errorMessage = payload.message;
     },
     [deletePost.fulfilled]: (state, { payload }) => {
-      console.log(state.posts);
-      console.log(payload);
       state.posts = state.posts.filter((post) => post._id !== payload._id);
     },
   },
 });
 
-export const { clearPostState, setShowCreateDialog } = postSlice.actions;
+export const { clearPostState, setShowCreateDialog, setOpenDeleteModal } =
+  postSlice.actions;
 
 export const postSelector = (state) => state.post;
 

@@ -17,11 +17,13 @@ import Search from "../search/Search";
 import Friend from "./Friend";
 import Notification from "./Notification";
 import { stateName } from "../../constants/state";
+import DeletePost from "./deletePost/DeletePost";
 
 const Home = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { showCreateDialog, posts } = useSelector(postSelector);
+  const { showCreateDialog, posts, openDeleteModal } =
+    useSelector(postSelector);
   const { myProfile } = useSelector(profileSelector);
   const [userId, setUserId] = React.useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = React.useState(false);
@@ -45,6 +47,8 @@ const Home = () => {
       dispatch(getPosts({}));
     }
   }, [showCreateDialog]);
+
+  React.useEffect(() => {}, [openDeleteModal]);
 
   return (
     <div>
@@ -155,6 +159,7 @@ const Home = () => {
       </div>
       <div>{showCreateDialog && <CreatePost />}</div>
       {showProfileDropdown && <ProfileDropdown />}
+      {openDeleteModal && <DeletePost />}
     </div>
   );
 };
