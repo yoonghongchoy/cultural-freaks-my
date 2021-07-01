@@ -136,6 +136,23 @@ export const unlikePost = createAsyncThunk(
   }
 );
 
+export const deletePost = createAsyncThunk(
+  "post/deletePost",
+  async (data, thunkAPI) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
+      const endpoint = `${url}/${data}`;
+      const response = await axios.delete(endpoint, { headers });
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
 export const postSlice = createSlice({
   name: "post",
   initialState,
@@ -180,6 +197,11 @@ export const postSlice = createSlice({
       state.isLoading = false;
       state.isCreatePostsError = true;
       state.errorMessage = payload.message;
+    },
+    [deletePost.fulfilled]: (state, { payload }) => {
+      console.log(state.posts);
+      console.log(payload);
+      state.posts = state.posts.filter((post) => post._id !== payload._id);
     },
   },
 });

@@ -5,7 +5,7 @@ import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { ReactComponent as ShareIcon } from "../../../assets/icons/share.svg";
 import moment from "moment";
 import Slider from "react-slick";
-import { likePost, unlikePost } from "../postSlice";
+import { deletePost, likePost, unlikePost } from "../postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { profileSelector } from "../../profile/profileSlice";
 import { useHistory, useLocation } from "react-router-dom";
@@ -88,26 +88,36 @@ const Post = ({ post }) => {
 
   return (
     <div className="max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-5xl flex flex-col bg-gray-200 p-4">
-      <div className="flex items-center space-x-4">
-        <div
-          className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
-          onClick={() => redirectToProfile()}
-        >
-          <img
-            alt="Jack"
-            src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-            className="object-cover object-center"
-          />
-        </div>
-        <div className="flex flex-col text-left">
-          <span
-            className="hover:underline cursor-pointer"
+      <div className="flex justify-between items-center">
+        <div className="flex items-center space-x-4">
+          <div
+            className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
             onClick={() => redirectToProfile()}
           >
-            {getFullName()}
-          </span>
-          <span className="text-sm">{getDuration()}</span>
+            <img
+              alt="Jack"
+              src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
+              className="object-cover object-center"
+            />
+          </div>
+          <div className="flex flex-col text-left">
+            <span
+              className="hover:underline cursor-pointer"
+              onClick={() => redirectToProfile()}
+            >
+              {getFullName()}
+            </span>
+            <span className="text-sm">{getDuration()}</span>
+          </div>
         </div>
+        {myProfile._id === post.user._id && (
+          <button
+            className="border border-black p-1 rounded-md bg-red-500"
+            onClick={() => dispatch(deletePost(post._id))}
+          >
+            Delete
+          </button>
+        )}
       </div>
       <div className="p-3 justify-self-center max-w-5xl">
         <Slider {...sliderSettings}>
