@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import moment from "moment";
 import { editProfile, profileSelector } from "../profileSlice";
+import { getPosts } from "../../home/postSlice";
 
 const EditProfile = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const EditProfile = ({ onClose }) => {
     data.dob = `${year}-${month}-${day}`;
     data.profilePicture = profilePicture;
     dispatch(editProfile(data));
+    dispatch(getPosts({ userId: myProfile._id }));
     onClose(false);
   };
 

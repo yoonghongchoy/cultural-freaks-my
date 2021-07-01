@@ -8,6 +8,13 @@ const Notification = () => {
   const dispatch = useDispatch();
   const [showDropdown, setShowDropdown] = React.useState(false);
   const { notifications } = useSelector(notificationSelector);
+  const wrapperRef = React.useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (wrapperRef && !wrapperRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
+  };
 
   React.useEffect(() => {
     if (showDropdown) {
@@ -17,8 +24,12 @@ const Notification = () => {
 
   React.useEffect(() => {}, [notifications]);
 
+  React.useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+  }, [wrapperRef]);
+
   return (
-    <div>
+    <div ref={wrapperRef}>
       <FontAwesomeIcon
         icon={faBell}
         className="cursor-pointer"

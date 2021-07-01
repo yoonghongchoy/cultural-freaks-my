@@ -13,6 +13,13 @@ const Friend = ({ userId }) => {
   const dispatch = useDispatch();
   const [showDropdown, setShowDropdown] = React.useState(false);
   const { friendRequests } = useSelector(profileSelector);
+  const wrapperRef = React.useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (wrapperRef && !wrapperRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
+  };
 
   React.useEffect(() => {
     if (showDropdown) {
@@ -22,8 +29,12 @@ const Friend = ({ userId }) => {
 
   React.useEffect(() => {}, [friendRequests]);
 
+  React.useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+  }, [wrapperRef]);
+
   return (
-    <div>
+    <div ref={wrapperRef}>
       <FontAwesomeIcon
         icon={faUserFriends}
         className="cursor-pointer"
