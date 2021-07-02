@@ -133,14 +133,14 @@ const Post = ({ post }) => {
               <img
                 alt="Jack"
                 src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                className="object-cover object-center"
+                className="w-full h-full object-cover object-center"
               />
             )}
             {post.user && post.user.profilePicture && (
               <img
                 alt={post.user.firstName}
                 src={`data:image/png;base64, ${post.user.profilePicture}`}
-                className="object-cover object-center"
+                className="w-full h-full object-cover object-center"
               />
             )}
           </div>
@@ -206,7 +206,7 @@ const Post = ({ post }) => {
                     <img
                       alt="Jack"
                       src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                      className="object-cover object-center"
+                      className="w-full h-full object-cover object-center"
                     />
                   )}
                 {post.originalPost.user &&
@@ -214,7 +214,7 @@ const Post = ({ post }) => {
                     <img
                       alt={post.originalPost.user.firstName}
                       src={`data:image/png;base64, ${post.originalPost.user.profilePicture}`}
-                      className="object-cover object-center"
+                      className="w-full h-full object-cover object-center"
                     />
                   )}
               </div>

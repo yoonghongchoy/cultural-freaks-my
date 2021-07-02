@@ -29,7 +29,7 @@ const FriendPanel = ({ friends, userId }) => {
                   <img
                     alt="Jack"
                     src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                    className="object-cover object-center"
+                    className="w-full h-full object-cover object-center"
                   />
                 </div>
                 <div className="flex flex-col text-left">

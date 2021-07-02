@@ -139,14 +139,14 @@ const EditProfile = ({ onClose }) => {
                     <img
                       alt="Jack"
                       src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                      className="object-cover object-center"
+                      className="w-full h-full object-cover object-center"
                     />
                   )}
                   {profilePicture && (
                     <img
                       alt={myProfile.firstName}
                       src={`data:image/png;base64, ${profilePicture}`}
-                      className="object-cover object-center"
+                      className="w-full h-full object-cover object-center"
                     />
                   )}
                 </div>

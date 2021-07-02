@@ -54,7 +54,7 @@ const Notification = () => {
                       <img
                         alt="Jack"
                         src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                        className="object-cover object-center"
+                        className="w-full h-full object-cover object-center"
                       />
                     </div>
                     <span className="w-56 break-words">
