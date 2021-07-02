@@ -15,6 +15,7 @@ const initialState = {
   openDeleteModal: false,
   deletePostId: "",
   postShared: false,
+  commentAdded: false,
 };
 
 export const getPosts = createAsyncThunk(
@@ -173,6 +174,23 @@ export const sharePost = createAsyncThunk(
   }
 );
 
+export const addComment = createAsyncThunk(
+  "post/addComment",
+  async (data, thunkAPI) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
+
+      const response = await axios.post(`${url}/comment`, data, { headers });
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
 export const postSlice = createSlice({
   name: "post",
   initialState,
@@ -196,6 +214,11 @@ export const postSlice = createSlice({
     },
     clearPostShared: (state) => {
       state.postShared = false;
+
+      return state;
+    },
+    clearCommentAdd: (state) => {
+      state.commentAdded = false;
 
       return state;
     },
@@ -231,8 +254,11 @@ export const postSlice = createSlice({
     [deletePost.fulfilled]: (state, { payload }) => {
       state.posts = state.posts.filter((post) => post._id !== payload._id);
     },
-    [sharePost.fulfilled]: (state, { payload }) => {
+    [sharePost.fulfilled]: (state) => {
       state.postShared = true;
+    },
+    [addComment.fulfilled]: (state, { payload }) => {
+      state.commentAdded = true;
     },
   },
 });
@@ -242,6 +268,7 @@ export const {
   setShowCreateDialog,
   setOpenDeleteModal,
   clearPostShared,
+  clearCommentAdd,
 } = postSlice.actions;
 
 export const postSelector = (state) => state.post;

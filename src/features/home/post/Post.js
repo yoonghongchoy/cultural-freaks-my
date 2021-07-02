@@ -6,7 +6,7 @@ import { ReactComponent as ShareIcon } from "../../../assets/icons/share.svg";
 import moment from "moment";
 import Slider from "react-slick";
 import {
-  getPosts,
+  addComment,
   likePost,
   setOpenDeleteModal,
   sharePost,
@@ -25,6 +25,8 @@ const Post = ({ post }) => {
   const { myProfile } = useSelector(profileSelector);
   const [isLike, setIsLike] = React.useState(false);
   const [likes, setLikes] = React.useState(post.likes.length);
+  const [showCommentInput, setShowCommentInput] = React.useState(false);
+  const [comment, setComment] = React.useState("");
 
   const sliderSettings = {
     dots: true,
@@ -93,6 +95,7 @@ const Post = ({ post }) => {
     }
   }, [post]);
 
+  console.log(post);
   return (
     <div className="max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-5xl flex flex-col bg-gray-200 p-4">
       <Toaster position="top-right" reverseOrder={false} />
@@ -270,6 +273,7 @@ const Post = ({ post }) => {
                       notifier: post.user._id,
                       content: `${myProfile.firstName} ${myProfile.surname} likes your post`,
                       post: post._id,
+                      comment: "",
                     })
                   );
                 }
@@ -292,6 +296,7 @@ const Post = ({ post }) => {
             icon={faComment}
             size="2x"
             className="cursor-pointer"
+            onClick={() => setShowCommentInput(!showCommentInput)}
           />
           <div
             onClick={() => {
@@ -301,6 +306,7 @@ const Post = ({ post }) => {
                   notifier: post.user._id,
                   content: `${myProfile.firstName} ${myProfile.surname} shares your post`,
                   post: post._id,
+                  comment: "",
                 })
               );
               toast.success("Post shared");
@@ -324,15 +330,50 @@ const Post = ({ post }) => {
             <span>{getCaption(post.content, post.hashtags)}</span>
           </div>
         )}
-        <div className="text-sm">
-          <span>Username: </span>
-          <span>Comment...</span>
-        </div>
-        <div className="text-sm">
-          <span>Username: </span>
-          <span>Comment...</span>
-        </div>
+        {post.comments &&
+          post.comments.map((comment, index) => {
+            return (
+              <div key={index} className="text-sm">
+                <span>
+                  {getFullName(comment.user.firstName, comment.user.surname)}:{" "}
+                </span>
+                <span>{comment.comment}</span>
+              </div>
+            );
+          })}
       </div>
+      {showCommentInput && (
+        <div className="w-full flex space-x-2">
+          <input
+            className="w-full p-1"
+            placeholder="Add comment"
+            value={comment}
+            onChange={(event) => setComment(event.target.value)}
+          />
+          <button
+            className="text-blue-700"
+            onClick={() => {
+              dispatch(
+                addComment({
+                  post: post._id,
+                  level: 1,
+                  comment: comment,
+                })
+              );
+              dispatch(
+                createNotification({
+                  notifier: post.user._id,
+                  content: `${myProfile.firstName} ${myProfile.surname} commented on your post`,
+                  post: post._id,
+                  comment: "",
+                })
+              );
+            }}
+          >
+            Post
+          </button>
+        </div>
+      )}
     </div>
   );
 };
