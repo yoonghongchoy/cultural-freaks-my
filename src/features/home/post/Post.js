@@ -29,6 +29,8 @@ const Post = ({ post }) => {
   const [showCommentInput, setShowCommentInput] = React.useState(false);
   const [comment, setComment] = React.useState("");
   const [commentList, setCommentList] = React.useState([]);
+  const [showReplyInput, setShowReplyInput] = React.useState("");
+  const [replyComment, setReplyComment] = React.useState("");
 
   const sliderSettings = {
     dots: true,
@@ -342,11 +344,83 @@ const Post = ({ post }) => {
         {commentList &&
           commentList.map((comment, index) => {
             return (
-              <div key={index} className="text-sm">
-                <span>
-                  {getFullName(comment.user.firstName, comment.user.surname)}:{" "}
-                </span>
-                <span>{comment.comment}</span>
+              <div key={index} className="flex flex-col text-sm">
+                <div>
+                  <span>
+                    {getFullName(comment.user.firstName, comment.user.surname)}:{" "}
+                  </span>
+                  <span>{comment.comment}</span>
+                </div>
+                <div className="flex">
+                  <span
+                    className="text-xs text-gray-500 cursor-pointer hover:underline"
+                    onClick={() => {
+                      setShowReplyInput(comment._id);
+                    }}
+                  >
+                    Reply
+                  </span>
+                  {myProfile._id === comment.user._id && (
+                    <span className="ml-2 text-xs text-gray-500 cursor-pointer hover:underline">
+                      Delete
+                    </span>
+                  )}
+                </div>
+                <div className="ml-5 pl-2 border-l border-gray-600">
+                  {comment.subComments.length > 0 &&
+                    comment.subComments.map((sub, index) => (
+                      <div>
+                        <span>
+                          {getFullName(sub.user.firstName, sub.user.surname)}:{" "}
+                        </span>
+                        <span>{sub.comment}</span>
+                      </div>
+                    ))}
+                  {showReplyInput === comment._id && (
+                    <div className="w-full flex space-x-2">
+                      <input
+                        className="w-full p-1"
+                        placeholder="Reply comment"
+                        value={replyComment}
+                        onChange={(event) =>
+                          setReplyComment(event.target.value)
+                        }
+                      />
+                      <button
+                        className="text-blue-700"
+                        onClick={() => {
+                          dispatch(
+                            addComment({
+                              post: post._id,
+                              level: 2,
+                              comment: replyComment,
+                              parentComment: comment._id,
+                            })
+                          ).then((response) => {
+                            if (response.payload.post === post._id) {
+                              commentList[index].subComments.push(
+                                response.payload
+                              );
+                              setCommentList([...commentList]);
+                              dispatch(
+                                createNotification({
+                                  notifier: post.user._id,
+                                  content: `${myProfile.firstName} ${myProfile.surname} replied your comment`,
+                                  post: post._id,
+                                  comment: response.payload._id,
+                                })
+                              );
+                            }
+                          });
+                          setReplyComment("");
+                          setShowReplyInput("");
+                        }}
+                      >
+                        Post
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}
@@ -372,16 +446,16 @@ const Post = ({ post }) => {
                 if (response.payload.post === post._id) {
                   commentList.push(response.payload);
                   setCommentList([...commentList]);
+                  dispatch(
+                    createNotification({
+                      notifier: post.user._id,
+                      content: `${myProfile.firstName} ${myProfile.surname} commented on your post`,
+                      post: post._id,
+                      comment: response.payload._id,
+                    })
+                  );
                 }
               });
-              dispatch(
-                createNotification({
-                  notifier: post.user._id,
-                  content: `${myProfile.firstName} ${myProfile.surname} commented on your post`,
-                  post: post._id,
-                  comment: "",
-                })
-              );
               setShowCommentInput(false);
               setComment("");
             }}
