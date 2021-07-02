@@ -7,6 +7,7 @@ import moment from "moment";
 import Slider from "react-slick";
 import {
   addComment,
+  getComment,
   likePost,
   setOpenDeleteModal,
   sharePost,
@@ -27,6 +28,7 @@ const Post = ({ post }) => {
   const [likes, setLikes] = React.useState(post.likes.length);
   const [showCommentInput, setShowCommentInput] = React.useState(false);
   const [comment, setComment] = React.useState("");
+  const [commentList, setCommentList] = React.useState([]);
 
   const sliderSettings = {
     dots: true,
@@ -90,12 +92,19 @@ const Post = ({ post }) => {
   };
 
   React.useEffect(() => {
+    dispatch(getComment(post._id)).then((response) =>
+      setCommentList(response.payload)
+    );
+  }, []);
+
+  React.useEffect(() => {
     if (post.likes.length > 0 && post.likes.includes(myProfile._id)) {
       setIsLike(true);
     }
   }, [post]);
 
-  console.log(post);
+  React.useEffect(() => {}, [commentList]);
+
   return (
     <div className="max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-5xl flex flex-col bg-gray-200 p-4">
       <Toaster position="top-right" reverseOrder={false} />
@@ -330,8 +339,8 @@ const Post = ({ post }) => {
             <span>{getCaption(post.content, post.hashtags)}</span>
           </div>
         )}
-        {post.comments &&
-          post.comments.map((comment, index) => {
+        {commentList &&
+          commentList.map((comment, index) => {
             return (
               <div key={index} className="text-sm">
                 <span>
@@ -359,7 +368,12 @@ const Post = ({ post }) => {
                   level: 1,
                   comment: comment,
                 })
-              );
+              ).then((response) => {
+                if (response.payload.post === post._id) {
+                  commentList.push(response.payload);
+                  setCommentList([...commentList]);
+                }
+              });
               dispatch(
                 createNotification({
                   notifier: post.user._id,
@@ -368,6 +382,8 @@ const Post = ({ post }) => {
                   comment: "",
                 })
               );
+              setShowCommentInput(false);
+              setComment("");
             }}
           >
             Post
