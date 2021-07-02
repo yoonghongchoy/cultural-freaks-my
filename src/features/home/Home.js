@@ -61,6 +61,7 @@ const Home = () => {
 
   React.useEffect(() => {
     if (!showCreateDialog) {
+      console.log("trigger");
       dispatch(getPosts({}));
     }
   }, [showCreateDialog]);
@@ -100,14 +101,14 @@ const Home = () => {
                   <img
                     alt="Jack"
                     src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                    className="object-cover object-center"
+                    className="w-full h-full object-cover object-center"
                   />
                 )}
                 {myProfile && myProfile.profilePicture && (
                   <img
                     alt={myProfile.firstName}
                     src={`data:image/png;base64, ${myProfile.profilePicture}`}
-                    className="object-cover object-center"
+                    className=" w-full h-full object-cover object-center"
                   />
                 )}
               </div>

@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Profile from "./features/profile/Profile";
 import ForgotPassword from "./features/auth/forgotPassword/ForgotPassword";
 import ResetPassword from "./features/auth/resetPassword/ResetPassword";
+import SinglePost from "./features/home/singlePost/SinglePost";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route exact path="/forgot" component={ForgotPassword} />
           <Route exact path="/reset" component={ResetPassword} />
           <Route exact path="/profile/:userId" component={Profile} />
+          <Route exact path="/post/:postId" component={SinglePost} />
         </Switch>
       </Router>
     </div>

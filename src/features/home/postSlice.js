@@ -6,6 +6,7 @@ const url = "http://localhost:8080/post";
 const initialState = {
   showCreateDialog: false,
   posts: [],
+  post: "",
   isLoading: false,
   isGetPostsSuccess: false,
   isGetPostsError: false,
@@ -86,6 +87,27 @@ export const getPosts = createAsyncThunk(
       }
 
       const response = await axios.get(endpoint, { headers });
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export const getPostById = createAsyncThunk(
+  "post/getPostById",
+  async (data, thunkAPI) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
+
+      if (data === "undefined") {
+        return "";
+      }
+
+      const response = await axios.get(`${url}/${data}`, { headers });
       return response.data;
     } catch (e) {
       console.log(e.response.data);
@@ -278,6 +300,9 @@ export const postSlice = createSlice({
       state.isLoading = false;
       state.isGetPostsError = true;
       state.errorMessage = payload ? payload.message : "";
+    },
+    [getPostById.fulfilled]: (state, { payload }) => {
+      state.post = payload;
     },
     [createPosts.fulfilled]: (state, { payload }) => {
       state.isLoading = false;

@@ -26,11 +26,20 @@ const FriendPanel = ({ friends, userId }) => {
                 onClick={() => history.push(`/profile/${user._id}`)}
               >
                 <div className="w-16 h-16 rounded-full bg-black overflow-hidden">
-                  <img
-                    alt="Jack"
-                    src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                    className="w-full h-full object-cover object-center"
-                  />
+                  {!user.profilePicture && (
+                    <img
+                      alt="Jack"
+                      src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
+                      className="w-full h-full object-cover object-center"
+                    />
+                  )}
+                  {user.profilePicture && (
+                    <img
+                      alt={user.firstName}
+                      src={`data:image/png;base64, ${user.profilePicture}`}
+                      className="w-full h-full object-cover object-center"
+                    />
+                  )}
                 </div>
                 <div className="flex flex-col text-left">
                   <span>{user.firstName + " " + user.surname}</span>

@@ -93,7 +93,7 @@ const Post = ({ post }) => {
     if (location.pathname.includes("profile/")) {
       history.push(`${id}`);
     } else {
-      history.push(`profile/${id}`);
+      history.push(`/profile/${id}`);
     }
   };
 
@@ -106,7 +106,7 @@ const Post = ({ post }) => {
   React.useEffect(() => {
     if (isDeleted) {
       dispatch(getComment(post._id)).then((response) =>
-        setCommentList(response.payload)
+        setCommentList([...response.payload])
       );
       dispatch(clearIsDeleted());
     }
@@ -121,7 +121,7 @@ const Post = ({ post }) => {
   React.useEffect(() => {}, [commentList]);
 
   return (
-    <div className="max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-5xl flex flex-col bg-gray-200 p-4">
+    <div className="max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-5xl flex flex-col bg-gray-200 p-4 mx-auto">
       <Toaster position="top-right" reverseOrder={false} />
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
@@ -438,10 +438,9 @@ const Post = ({ post }) => {
                             })
                           ).then((response) => {
                             if (response.payload.post === post._id) {
-                              commentList[index].subComments.push(
-                                response.payload
+                              dispatch(getComment(post._id)).then((response) =>
+                                setCommentList([...response.payload])
                               );
-                              setCommentList([...commentList]);
                               dispatch(
                                 createNotification({
                                   notifier: post.user._id,

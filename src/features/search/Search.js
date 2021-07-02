@@ -3,11 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import { getSearch, searchSelector, setSearchQuery } from "./searchSlice";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 const Search = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   const { searchResult, searchQuery } = useSelector(searchSelector);
 
   React.useEffect(() => {
@@ -70,6 +71,10 @@ const Search = () => {
                 <div
                   key={index}
                   className="flex justify-between space-x-6 p-3 items-center hover:bg-gray-300"
+                  onClick={() => {
+                    dispatch(setSearchQuery(""));
+                    history.push(`/post/${post._id}`);
+                  }}
                 >
                   <span className="text-lg">
                     {post.content.length > 60
