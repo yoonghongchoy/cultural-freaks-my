@@ -17,6 +17,9 @@ const initialState = {
   postShared: false,
   postComment: [],
   newComment: "",
+  deleteCommentId: "",
+  openDeleteCommentModal: false,
+  isDeleted: false,
 };
 
 export const getPosts = createAsyncThunk(
@@ -192,6 +195,23 @@ export const addComment = createAsyncThunk(
   }
 );
 
+export const deleteComment = createAsyncThunk(
+  "post/deleteComment",
+  async (data, thunkAPI) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
+      const endpoint = `${url}/comment/${data}`;
+      const response = await axios.delete(endpoint, { headers });
+      return response.data;
+    } catch (e) {
+      console.log(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
 export const getComment = createAsyncThunk(
   "post/getComment",
   async (data, thunkAPI) => {
@@ -235,6 +255,14 @@ export const postSlice = createSlice({
 
       return state;
     },
+    setOpenDeleteCommentModal: (state, action) => {
+      const { openDeleteCommentModal, id } = action.payload;
+      state.openDeleteCommentModal = openDeleteCommentModal;
+      state.deleteCommentId = id;
+    },
+    clearIsDeleted: (state) => {
+      state.isDeleted = false;
+    },
   },
   extraReducers: {
     [getPosts.fulfilled]: (state, { payload }) => {
@@ -273,9 +301,12 @@ export const postSlice = createSlice({
     [addComment.fulfilled]: (state, { payload }) => {
       state.newComment = payload;
     },
-    [getComment().fulfilled]: (state, { payload }) => {
+    [getComment.fulfilled]: (state, { payload }) => {
       state.postComment = payload;
       return state;
+    },
+    [deleteComment.fulfilled]: (state) => {
+      state.isDeleted = true;
     },
   },
 });
@@ -285,6 +316,8 @@ export const {
   setShowCreateDialog,
   setOpenDeleteModal,
   clearPostShared,
+  setOpenDeleteCommentModal,
+  clearIsDeleted,
 } = postSlice.actions;
 
 export const postSelector = (state) => state.post;

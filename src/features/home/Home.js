@@ -20,12 +20,18 @@ import Notification from "./Notification";
 import { stateName } from "../../constants/state";
 import DeletePost from "./deletePost/DeletePost";
 import { subCategoryList } from "../../constants/subCategoryList";
+import DeleteComment from "./deleteComment/DeleteComment";
 
 const Home = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { showCreateDialog, posts, openDeleteModal, postShared } =
-    useSelector(postSelector);
+  const {
+    showCreateDialog,
+    posts,
+    openDeleteModal,
+    postShared,
+    openDeleteCommentModal,
+  } = useSelector(postSelector);
   const { myProfile } = useSelector(profileSelector);
   const [userId, setUserId] = React.useState(null);
   const [showProfileDropdown, setShowProfileDropdown] = React.useState(false);
@@ -226,6 +232,7 @@ const Home = () => {
       <div>{showCreateDialog && <CreatePost />}</div>
       {showProfileDropdown && <ProfileDropdown />}
       {openDeleteModal && <DeletePost />}
+      {openDeleteCommentModal && <DeleteComment />}
     </div>
   );
 };

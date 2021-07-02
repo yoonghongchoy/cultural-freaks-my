@@ -28,6 +28,7 @@ import Notification from "../home/Notification";
 import CreatePost from "../home/createPost/CreatePost";
 import DeletePost from "../home/deletePost/DeletePost";
 import EditProfile from "./editProfile/EditProfile";
+import DeleteComment from "../home/deleteComment/DeleteComment";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -36,8 +37,13 @@ const Profile = () => {
   const { userId } = useParams();
   // 1: Posts panel, 2: Friends panel
   const [panel, setPanel] = React.useState(1);
-  const { showCreateDialog, posts, isGetPostsSuccess, openDeleteModal } =
-    useSelector(postSelector);
+  const {
+    showCreateDialog,
+    posts,
+    isGetPostsSuccess,
+    openDeleteModal,
+    openDeleteCommentModal,
+  } = useSelector(postSelector);
   const { friends, myProfile, userProfile, requestSent, isFriend } =
     useSelector(profileSelector);
   const [isSameUser, setIsSameUser] = React.useState(false);
@@ -112,17 +118,17 @@ const Profile = () => {
                   }
                 }}
               >
-                {userProfile && !userProfile.profilePicture && (
+                {myProfile && !myProfile.profilePicture && (
                   <img
                     alt="Jack"
                     src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
                     className="object-cover object-center"
                   />
                 )}
-                {userProfile && userProfile.profilePicture && (
+                {myProfile && myProfile.profilePicture && (
                   <img
-                    alt={userProfile.firstName}
-                    src={`data:image/png;base64, ${userProfile.profilePicture}`}
+                    alt={myProfile.firstName}
+                    src={`data:image/png;base64, ${myProfile.profilePicture}`}
                     className="object-cover object-center"
                   />
                 )}
@@ -246,6 +252,7 @@ const Profile = () => {
       {showProfileDropdown && <ProfileDropdown />}
       {openDeleteModal && <DeletePost />}
       {editProfile && <EditProfile onClose={setEditProfile} />}
+      {openDeleteCommentModal && <DeleteComment />}
     </div>
   );
 };

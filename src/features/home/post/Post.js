@@ -7,8 +7,11 @@ import moment from "moment";
 import Slider from "react-slick";
 import {
   addComment,
+  clearIsDeleted,
   getComment,
   likePost,
+  postSelector,
+  setOpenDeleteCommentModal,
   setOpenDeleteModal,
   sharePost,
   unlikePost,
@@ -24,6 +27,7 @@ const Post = ({ post }) => {
   const history = useHistory();
   const location = useLocation();
   const { myProfile } = useSelector(profileSelector);
+  const { isDeleted } = useSelector(postSelector);
   const [isLike, setIsLike] = React.useState(false);
   const [likes, setLikes] = React.useState(post.likes.length);
   const [showCommentInput, setShowCommentInput] = React.useState(false);
@@ -95,9 +99,18 @@ const Post = ({ post }) => {
 
   React.useEffect(() => {
     dispatch(getComment(post._id)).then((response) =>
-      setCommentList(response.payload)
+      setCommentList([...response.payload])
     );
   }, []);
+
+  React.useEffect(() => {
+    if (isDeleted) {
+      dispatch(getComment(post._id)).then((response) =>
+        setCommentList(response.payload)
+      );
+      dispatch(clearIsDeleted());
+    }
+  }, [isDeleted]);
 
   React.useEffect(() => {
     if (post.likes.length > 0 && post.likes.includes(myProfile._id)) {
@@ -361,7 +374,17 @@ const Post = ({ post }) => {
                     Reply
                   </span>
                   {myProfile._id === comment.user._id && (
-                    <span className="ml-2 text-xs text-gray-500 cursor-pointer hover:underline">
+                    <span
+                      className="ml-2 text-xs text-gray-500 cursor-pointer hover:underline"
+                      onClick={() =>
+                        dispatch(
+                          setOpenDeleteCommentModal({
+                            openDeleteCommentModal: true,
+                            id: comment._id,
+                          })
+                        )
+                      }
+                    >
                       Delete
                     </span>
                   )}
@@ -369,11 +392,28 @@ const Post = ({ post }) => {
                 <div className="ml-5 pl-2 border-l border-gray-600">
                   {comment.subComments.length > 0 &&
                     comment.subComments.map((sub, index) => (
-                      <div>
-                        <span>
-                          {getFullName(sub.user.firstName, sub.user.surname)}:{" "}
-                        </span>
-                        <span>{sub.comment}</span>
+                      <div key={index} className="flex flex-col">
+                        <div>
+                          <span>
+                            {getFullName(sub.user.firstName, sub.user.surname)}:{" "}
+                          </span>
+                          <span>{sub.comment}</span>
+                        </div>
+                        {myProfile._id === sub.user._id && (
+                          <span
+                            className="text-xs text-gray-500 cursor-pointer hover:underline"
+                            onClick={() =>
+                              dispatch(
+                                setOpenDeleteCommentModal({
+                                  openDeleteCommentModal: true,
+                                  id: sub._id,
+                                })
+                              )
+                            }
+                          >
+                            Delete
+                          </span>
+                        )}
                       </div>
                     ))}
                   {showReplyInput === comment._id && (
