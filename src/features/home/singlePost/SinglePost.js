@@ -97,8 +97,10 @@ const SinglePost = () => {
             style={{ height: "calc(100% - 4rem)" }}
           >
             <div className="w-full h-full py-6 px-20 mx-auto overflow-y-auto space-y-3">
-              {post && <Post post={post} />}
-              {!post && <span className="m-auto">No post found!</span>}
+              <div className="flex w-full justify-center">
+                {post && <Post post={post} />}
+                {!post && <span className="m-auto">No post found!</span>}
+              </div>
             </div>
           </div>
         </div>

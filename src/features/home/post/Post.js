@@ -121,7 +121,7 @@ const Post = ({ post }) => {
   React.useEffect(() => {}, [commentList]);
 
   return (
-    <div className="max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-5xl flex flex-col bg-gray-200 p-4 mx-auto">
+    <div className="max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-5xl flex flex-col bg-gray-200 p-4">
       <Toaster position="top-right" reverseOrder={false} />
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
