@@ -123,9 +123,18 @@ export const createPosts = createAsyncThunk(
       const headers = {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       };
+      const formData = new FormData();
+      formData.append("content", data.content);
+      formData.append("hashtags", data.hashtags);
+      if (data.files) {
+        for (const file of data.files) {
+          formData.append("files", file);
+        }
+      }
 
-      await axios.post(url, data, { headers });
+      await axios.post(url, formData, { headers });
     } catch (e) {
+      console.log(e);
       console.log(e.response.data);
       return thunkAPI.rejectWithValue(e.response.data);
     }

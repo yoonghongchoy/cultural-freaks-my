@@ -65,11 +65,20 @@ const Friend = ({ userId }) => {
                   >
                     <div className="flex items-center">
                       <div className="w-10 h-10 rounded-full bg-black overflow-hidden">
-                        <img
-                          alt="Jack"
-                          src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                          className="object-cover object-center"
-                        />
+                        {!user.profilePicture && (
+                          <img
+                            alt="Jack"
+                            src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
+                            className="object-cover object-center"
+                          />
+                        )}
+                        {user.profilePicture && (
+                          <img
+                            alt={user.firstName}
+                            src={`data:image/png;base64, ${user.profilePicture}`}
+                            className="w-full h-full object-cover object-center"
+                          />
+                        )}
                       </div>
                       <span className="w-32 m-2 font-light break-words text-left">
                         {user.firstName + " " + user.surname}

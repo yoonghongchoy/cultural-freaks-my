@@ -101,6 +101,7 @@ const Post = ({ post }) => {
     dispatch(getComment(post._id)).then((response) =>
       setCommentList([...response.payload])
     );
+    setLikes(post.likes.length);
   }, []);
 
   React.useEffect(() => {
@@ -116,6 +117,10 @@ const Post = ({ post }) => {
     if (post.likes.length > 0 && post.likes.includes(myProfile._id)) {
       setIsLike(true);
     }
+    dispatch(getComment(post._id)).then((response) =>
+      setCommentList([...response.payload])
+    );
+    setLikes(post.likes.length);
   }, [post]);
 
   React.useEffect(() => {}, [commentList]);
@@ -168,7 +173,12 @@ const Post = ({ post }) => {
         )}
       </div>
       <div className="p-3 justify-self-center max-w-5xl">
-        {!post.originalPost && (
+        {post.originalPost === null && (
+          <div className="border border-gray-500 flex flex-col shadow-lg py-2">
+            <span>Original post has been removed</span>
+          </div>
+        )}
+        {post.originalPost === undefined && (
           <Slider {...sliderSettings}>
             {post.medias.length > 0 &&
               post.medias.map((media, index) => {
@@ -342,7 +352,7 @@ const Post = ({ post }) => {
         <span>{likes > 1 ? `${likes} likes` : `${likes} like`}</span>
       </div>
       <div className="flex flex-col my-2 text-left">
-        {!post.originalPost && (
+        {post.content && (
           <div className="text-sm">
             <span
               className="hover:underline cursor-pointer"

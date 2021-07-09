@@ -30,6 +30,7 @@ const CreatePost = () => {
   const hiddenImageUploadInput = React.useRef(null);
   const hiddenVideoUploadInput = React.useRef(null);
   const [medias, setMedias] = React.useState([]);
+  const [files, setFiles] = React.useState([]);
   const [toastId, setToastId] = React.useState("");
   const [subCategory, setSubCategory] = React.useState([]);
   const [openCategoryModal, setOpenCategoryModal] = React.useState(false);
@@ -49,10 +50,16 @@ const CreatePost = () => {
       }
     }
 
+    const files = [];
+
+    for (const media of medias) {
+      files.push(media.file);
+    }
+
     const newPost = {
       content: content,
       hashtags: hashtag,
-      medias,
+      files,
     };
     dispatch(createPosts(newPost));
   };
@@ -82,7 +89,7 @@ const CreatePost = () => {
     const mediaFile = [...medias];
     for (const mediaUploadedElement of mediaUploaded) {
       const mediaObject = await convertFileToBase64(mediaUploadedElement, type);
-      mediaFile.push(mediaObject);
+      mediaFile.push({ ...mediaObject, file: mediaUploadedElement });
     }
     setMedias([...mediaFile]);
   };
