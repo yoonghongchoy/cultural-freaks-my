@@ -53,11 +53,20 @@ const Search = () => {
                 >
                   <div className="flex items-center space-x-6">
                     <div className="w-7 h-7 rounded-full bg-black overflow-hidden">
-                      <img
-                        alt="Jack"
-                        src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
-                        className="object-cover object-center"
-                      />
+                      {!user.profilePicture && (
+                        <img
+                          alt="Jack"
+                          src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
+                          className="w-full h-full object-cover object-center"
+                        />
+                      )}
+                      {user.profilePicture && (
+                        <img
+                          alt={user.firstName}
+                          src={`data:image/png;base64, ${user.profilePicture}`}
+                          className=" w-full h-full object-cover object-center"
+                        />
+                      )}
                     </div>
                     <span className="text-lg">
                       {user.firstName + " " + user.surname}

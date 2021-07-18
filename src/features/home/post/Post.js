@@ -186,9 +186,10 @@ const Post = ({ post }) => {
                   return (
                     <img
                       key={index}
+                      className="max-w-max"
                       alt={media.name}
                       src={`data:image/png;base64, ${media.value}`}
-                      className="max-w-max"
+                      loading="lazy"
                     />
                   );
                 } else if (media.type === "video") {

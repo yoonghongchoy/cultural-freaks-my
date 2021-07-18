@@ -106,7 +106,7 @@ const Profile = () => {
                 className="cursor-pointer"
                 onClick={() => dispatch(setShowCreateDialog(!showCreateDialog))}
               />
-              <Friend userId={userId} />
+              <Friend userId={myProfile ? myProfile._id : null} />
               <Notification />
               <div
                 className="w-10 h-10 rounded-full bg-black overflow-hidden cursor-pointer"
@@ -189,7 +189,7 @@ const Profile = () => {
                     <button
                       className="w-full bg-yellow-500 text-white p-3 rounded-lg font-semibold text-lg"
                       onClick={() => {
-                        dispatch(sendFriendRequest(userId));
+                        dispatch(sendFriendRequest({ userId }));
                       }}
                     >
                       Add friend
@@ -233,7 +233,7 @@ const Profile = () => {
                   Friends
                 </span>
               </div>
-              <div className="mx-auto">
+              <div className="flex justify-center">
                 {panel === 1 && (
                   <PostPanel
                     posts={posts}

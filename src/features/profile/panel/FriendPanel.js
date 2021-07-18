@@ -43,7 +43,7 @@ const FriendPanel = ({ friends, userId }) => {
                 </div>
                 <div className="flex flex-col text-left">
                   <span>{user.firstName + " " + user.surname}</span>
-                  <span className="text-sm">1 mutual friends</span>
+                  {/*<span className="text-sm">1 mutual friends</span>*/}
                 </div>
               </div>
             );

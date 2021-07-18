@@ -68,7 +68,7 @@ const CreatePost = () => {
     const reader = new FileReader();
 
     return new Promise((resolve, reject) => {
-      reader.onload = (fileEvent) => {
+      reader.onload = () => {
         const base64String = reader.result
           .replace("data:", "")
           .replace(/^.+,/, "");
@@ -316,7 +316,11 @@ const CreatePost = () => {
                         disable ? "text-gray-200" : "hover:bg-gray-400"
                       }`}
                       disabled={disable}
-                      onClick={() => setSubCategory([...subCategory, category])}
+                      onClick={() => {
+                        if (!disable) {
+                          setSubCategory([...subCategory, category]);
+                        }
+                      }}
                     >
                       {category}
                     </div>

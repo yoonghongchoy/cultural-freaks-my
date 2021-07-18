@@ -76,13 +76,7 @@ export const sendFriendRequest = createAsyncThunk(
       const headers = {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       };
-      const response = await axios.post(
-        url,
-        {
-          userId: data,
-        },
-        { headers }
-      );
+      const response = await axios.post(url, data, { headers });
       return response.data;
     } catch (e) {
       console.log(e.response.data);

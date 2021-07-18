@@ -46,17 +46,11 @@ const Friend = ({ userId }) => {
       />
       {showDropdown && (
         <div className="absolute top-16 right-1.5 w-80 origin-top-right text-base z-50">
-          <div className="flex justify-center items-center p-2 bg-white rounded-md shadow-lg">
+          <div className="flex flex-col justify-center items-center p-2 bg-white rounded-md shadow-lg">
             {friendRequests.length === 0 && <span>No friend request</span>}
             {friendRequests.length > 0 &&
               friendRequests.map((friend, index) => {
-                let user = "";
-
-                if (friend.user1._id !== userId) {
-                  user = friend.user1;
-                } else {
-                  user = friend.user2;
-                }
+                let user = friend.user1;
 
                 return (
                   <div

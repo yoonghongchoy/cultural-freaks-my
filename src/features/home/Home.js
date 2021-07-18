@@ -57,11 +57,12 @@ const Home = () => {
     if (myProfile) {
       setUserId(myProfile._id);
     }
-  }, [posts, myProfile]);
+  }, [myProfile]);
+
+  React.useEffect(() => {}, [posts]);
 
   React.useEffect(() => {
     if (!showCreateDialog) {
-      console.log("trigger");
       dispatch(getPosts({}));
     }
   }, [showCreateDialog]);
@@ -219,7 +220,7 @@ const Home = () => {
                   </div>
                 )}
               </div>
-              <div className="flex flex-col h-full overflow-x-hidden overflow-y-auto py-6 px-20 space-y-3">
+              <div className="flex flex-col h-full overflow-x-auto overflow-y-auto py-6 px-20 space-y-3">
                 {posts.length > 0 &&
                   posts.map((post, index) => <Post key={index} post={post} />)}
                 {posts.length === 0 && (

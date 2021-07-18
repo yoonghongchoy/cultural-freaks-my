@@ -125,7 +125,9 @@ export const createPosts = createAsyncThunk(
       };
       const formData = new FormData();
       formData.append("content", data.content);
-      formData.append("hashtags", data.hashtags);
+      for (const hashtag of data.hashtags) {
+        formData.append("hashtags", hashtag);
+      }
       if (data.files) {
         for (const file of data.files) {
           formData.append("files", file);
@@ -134,7 +136,6 @@ export const createPosts = createAsyncThunk(
 
       await axios.post(url, formData, { headers });
     } catch (e) {
-      console.log(e);
       console.log(e.response.data);
       return thunkAPI.rejectWithValue(e.response.data);
     }
